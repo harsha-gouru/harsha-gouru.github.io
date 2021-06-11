@@ -4,7 +4,7 @@
 Web Developer and Neural Netwroks Specialist
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [GitHub](https://github.com/harsha-gouru).
 
 ### Jekyll Themes
 
