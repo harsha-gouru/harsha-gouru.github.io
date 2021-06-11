@@ -1,7 +1,7 @@
 ## Sri Harsha Gouru
 
 ```markdown
-Just Using Jekyll as the Javascript library
+Web Developer and Neural Netwroks Specialist
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
