@@ -10,7 +10,7 @@ interface TagListProps {
 const TagList: React.FC<TagListProps> = ({ tags, selectedTags, onTagSelect }) => {
   return (
     <div className="mb-16">
-      <h2 className="text-sm font-medium tracking-wider uppercase text-slate-500 mb-4">
+      <h2 className="text-sm font-medium uppercase text-gray-500 mb-4">
         Browse by Topic
       </h2>
       <div className="flex flex-wrap gap-2">

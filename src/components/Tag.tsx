@@ -16,13 +16,13 @@ const Tag: React.FC<TagProps> = ({
   isSelected = false,
   onClick 
 }) => {
-  const baseClasses = "inline-flex items-center text-sm py-1 px-3 rounded-full transition-all duration-300";
+  const baseClasses = "inline-flex items-center text-sm py-1 px-3 rounded-full transition-colors duration-200";
   
   const buttonClasses = isSelected
-    ? "bg-slate-800 text-cyan-300 border border-cyan-500 shadow-sm"
-    : "bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 hover:text-slate-800";
+    ? "bg-black text-white border border-black"
+    : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-100 hover:text-gray-900";
   
-  const linkClasses = "border border-slate-200 text-slate-600 bg-slate-50 hover:text-slate-900 hover:border-cyan-300 hover:shadow-sm";
+  const linkClasses = "border border-gray-200 text-gray-600 bg-white hover:text-black hover:border-gray-300";
 
   if (isButton) {
     return (
@@ -32,7 +32,7 @@ const Tag: React.FC<TagProps> = ({
       >
         {name}
         {count !== undefined && (
-          <span className={`ml-2 ${isSelected ? 'bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded-full text-xs' : 'text-slate-500'}`}>
+          <span className={`ml-2 ${isSelected ? 'text-gray-400' : 'text-gray-500'}`}>
             {count}
           </span>
         )}
@@ -47,7 +47,7 @@ const Tag: React.FC<TagProps> = ({
     >
       {name}
       {count !== undefined && (
-        <span className="ml-2 bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full text-xs">
+        <span className="ml-2 text-gray-500">
           {count}
         </span>
       )}

@@ -38,18 +38,18 @@ const BlogPost: React.FC<BlogPostProps> = ({
   return (
     <article className={`prose max-w-none ${isPreview ? 'group cursor-pointer' : ''}`}>
       <header className="mb-6">
-        <div className="flex items-center text-sm text-slate-400 mb-2">
-          <time dateTime={date} className="transition-colors duration-300 group-hover:text-slate-600 flex items-center">
-            <svg className="w-4 h-4 mr-1.5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <div className="flex items-center text-sm text-gray-500 mb-2">
+          <time dateTime={date} className="transition-colors duration-200 group-hover:text-gray-700 flex items-center">
+            <svg className="w-4 h-4 mr-1.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             {formattedDate}
           </time>
           {readingTime && (
             <>
-              <span className="mx-2 text-slate-300">•</span>
-              <span className="transition-colors duration-300 group-hover:text-slate-600 flex items-center">
-                <svg className="w-4 h-4 mr-1.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <span className="mx-2 text-gray-400">•</span>
+              <span className="transition-colors duration-200 group-hover:text-gray-700 flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {readingTime}
@@ -58,7 +58,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
           )}
         </div>
         
-        <h1 className={`font-bold text-2xl ${isPreview ? 'md:text-3xl' : 'md:text-4xl'} tracking-tight mb-4 transition-colors duration-300 ${isPreview ? 'group-hover:text-cyan-700' : 'text-slate-900'}`}>
+        <h1 className={`font-bold text-2xl ${isPreview ? 'md:text-3xl' : 'md:text-4xl'} tracking-tight mb-4 transition-colors duration-200 ${isPreview ? 'group-hover:text-black' : 'text-black'}`}>
           {title}
         </h1>
         
@@ -71,7 +71,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
         )}
       </header>
 
-      <div className="mb-10 prose-p:my-4 prose-headings:mt-8 prose-headings:mb-4 prose-headings:font-semibold prose-a:text-cyan-600 hover:prose-a:text-cyan-700 prose-code:text-indigo-600 prose-pre:bg-slate-50 prose-pre:border prose-pre:border-slate-200 prose-pre:shadow-sm">
+      <div className="mb-10 prose-p:my-4 prose-headings:mt-8 prose-headings:mb-4 prose-headings:font-semibold prose-a:text-gray-700 hover:prose-a:text-black prose-code:text-gray-800 prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200">
         <ReactMarkdown
           components={{
             code: ({ className, children }) => {
@@ -81,35 +81,35 @@ const BlogPost: React.FC<BlogPostProps> = ({
                   style={vs as any}
                   language={match[1]}
                   PreTag="div"
-                  className="!bg-slate-50 !border !border-slate-200 !rounded-md !text-slate-800 !my-6 !shadow-sm"
+                  className="!bg-gray-50 !border !border-gray-200 !rounded !text-gray-900 !my-6"
                 >
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
               ) : (
-                <code className={`${className} bg-slate-100 text-indigo-600 px-1.5 py-0.5 rounded-md font-medium`}>
+                <code className={`${className} bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded font-medium`}>
                   {children}
                 </code>
               );
             },
             h2: ({ children }) => (
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mt-12 mb-6 pb-2 border-b border-slate-100">
+              <h2 className="text-xl md:text-2xl font-bold text-black tracking-tight mt-12 mb-6 pb-2 border-b border-gray-100">
                 {children}
               </h2>
             ),
             h3: ({ children }) => (
-              <h3 className="text-lg md:text-xl font-semibold text-slate-800 tracking-tight mt-8 mb-4">
+              <h3 className="text-lg md:text-xl font-semibold text-black tracking-tight mt-8 mb-4">
                 {children}
               </h3>
             ),
             p: ({ children }) => (
-              <p className="text-slate-700 leading-relaxed my-4">
+              <p className="text-gray-700 leading-relaxed my-4">
                 {children}
               </p>
             ),
             a: ({ href, children }) => (
               <a 
                 href={href} 
-                className="text-cyan-600 hover:text-cyan-700 transition-colors font-medium underline decoration-cyan-200 decoration-2 underline-offset-2 hover:decoration-cyan-400"
+                className="text-gray-700 hover:text-black transition-colors font-medium underline decoration-gray-300 underline-offset-2 hover:decoration-gray-500"
                 target={href?.startsWith('http') ? "_blank" : undefined}
                 rel={href?.startsWith('http') ? "noopener noreferrer" : undefined}
               >
@@ -117,17 +117,17 @@ const BlogPost: React.FC<BlogPostProps> = ({
               </a>
             ),
             ul: ({ children }) => (
-              <ul className="text-slate-700 my-4 pl-6 space-y-2">
+              <ul className="text-gray-700 my-4 pl-6 space-y-2">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="text-slate-700 my-4 pl-6 space-y-2">
+              <ol className="text-gray-700 my-4 pl-6 space-y-2">
                 {children}
               </ol>
             ),
             blockquote: ({ children }) => (
-              <blockquote className="border-l-4 border-cyan-300 pl-4 italic my-6 text-slate-600 bg-slate-50/50 py-2 pr-2 rounded-r">
+              <blockquote className="border-l-4 border-gray-300 pl-4 italic my-6 text-gray-600 bg-gray-50 py-2 pr-2">
                 {children}
               </blockquote>
             ),
@@ -140,7 +140,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
       {isPreview && (
         <footer>
           <span
-            className="inline-flex items-center space-x-2 text-cyan-600 tracking-wide group-hover:text-cyan-700 transition-colors duration-300 font-medium"
+            className="inline-flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 font-medium"
           >
             <span>Continue reading</span>
             <span className="transform transition-transform group-hover:translate-x-1">→</span>
