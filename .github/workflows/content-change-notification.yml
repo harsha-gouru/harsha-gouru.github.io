@@ -9,8 +9,6 @@ on:
       - 'content/_incoming/**'
     branches:
       - 'main'
-    branches-ignore:
-      - 'gh-pages'
 
 jobs:
   notify:
