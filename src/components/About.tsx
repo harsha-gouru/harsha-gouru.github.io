@@ -2,72 +2,72 @@ import React from 'react';
 
 const About: React.FC = () => {
   return (
-    <div className="max-w-4xl mx-auto">
-      <section className="text-center mb-16">
-        <h1 className="font-heading text-5xl font-bold mb-6 bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">
+    <div className="container-base py-16">
+      <section className="section-spacing text-center">
+        <h1 className="heading-1 bg-gradient-text">
           About Me
         </h1>
         <img
           src="https://github.com/harsha-gouru.png"
           alt="Harsha Gouru"
-          className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-primary-500"
+          className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-warm-gray-300"
         />
-        <p className="text-xl text-gray-600 dark:text-gray-400">
+        <p className="body-large">
           Hi, I'm Harsha! I'm a passionate software engineer who loves building things for the web.
         </p>
       </section>
 
-      <section className="prose prose-lg dark:prose-invert prose-primary max-w-none mb-16">
-        <h2 className="font-heading text-3xl font-bold text-gray-900 dark:text-white">
+      <section className="section-spacing prose prose-lg max-w-none">
+        <h2 className="heading-2">
           My Journey
         </h2>
-        <p>
+        <p className="body-normal">
           I started my journey in software development during my college years, where I discovered
           my passion for creating web applications. Since then, I've been constantly learning and
           exploring new technologies to improve my skills.
         </p>
-        <p>
+        <p className="body-normal">
           Currently, I'm focused on modern web development technologies like React, TypeScript,
           and Node.js. I believe in writing clean, maintainable code and creating intuitive user
           experiences.
         </p>
 
-        <h2 className="font-heading text-3xl font-bold text-gray-900 dark:text-white">
+        <h2 className="heading-2">
           What I Do
         </h2>
-        <ul>
-          <li>Frontend Development with React and TypeScript</li>
-          <li>Backend Development with Node.js</li>
-          <li>Database Design and Implementation</li>
-          <li>API Development and Integration</li>
-          <li>Technical Writing and Documentation</li>
+        <ul className="space-y-2">
+          <li className="body-normal">Frontend Development with React and TypeScript</li>
+          <li className="body-normal">Backend Development with Node.js</li>
+          <li className="body-normal">Database Design and Implementation</li>
+          <li className="body-normal">API Development and Integration</li>
+          <li className="body-normal">Technical Writing and Documentation</li>
         </ul>
 
-        <h2 className="font-heading text-3xl font-bold text-gray-900 dark:text-white">
+        <h2 className="heading-2">
           Beyond Coding
         </h2>
-        <p>
+        <p className="body-normal">
           When I'm not coding, you can find me reading tech blogs, contributing to open-source
           projects, or exploring new tools and frameworks. I also enjoy sharing my knowledge
           through writing and helping others learn programming.
         </p>
       </section>
 
-      <section className="grid md:grid-cols-2 gap-8 mb-16">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-          <h2 className="font-heading text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+      <section className="section-spacing grid md:grid-cols-2 gap-8">
+        <div className="card">
+          <h2 className="heading-3">
             Skills
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
+              <h3 className="heading-4">
                 Frontend
               </h3>
               <div className="flex flex-wrap gap-2">
                 {['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'HTML/CSS'].map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-sm"
+                    className="px-3 py-1 rounded-full bg-warm-gray-100 text-warm-gray-700 text-sm"
                   >
                     {skill}
                   </span>
@@ -75,14 +75,14 @@ const About: React.FC = () => {
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
+              <h3 className="heading-4">
                 Backend
               </h3>
               <div className="flex flex-wrap gap-2">
                 {['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST APIs'].map((skill) => (
                   <span
                     key={skill}
-                    className="px-3 py-1 rounded-full bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 text-sm"
+                    className="px-3 py-1 rounded-full bg-warm-gray-100 text-warm-gray-700 text-sm"
                   >
                     {skill}
                   </span>
@@ -92,11 +92,11 @@ const About: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
-          <h2 className="font-heading text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        <div className="card">
+          <h2 className="heading-3">
             Get in Touch
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="body-normal mb-6">
             I'm always open to new opportunities and collaborations. Feel free to reach out!
           </p>
           <div className="space-y-4">
@@ -104,7 +104,7 @@ const About: React.FC = () => {
               href="https://github.com/harsha-gouru"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
             >
               <svg
                 className="w-6 h-6 mr-2"
@@ -120,7 +120,7 @@ const About: React.FC = () => {
               href="https://linkedin.com/in/harsha-gouru"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
             >
               <svg
                 className="w-6 h-6 mr-2"
@@ -134,7 +134,7 @@ const About: React.FC = () => {
             </a>
             <a
               href="mailto:harsha.gouru@example.com"
-              className="flex items-center text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
             >
               <svg
                 className="w-6 h-6 mr-2"

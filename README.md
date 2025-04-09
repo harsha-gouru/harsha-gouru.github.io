@@ -1,65 +1,83 @@
 # Personal Blog
 
-This is my personal blog built with React, TypeScript, and Tailwind CSS. It's hosted on GitHub Pages.
+A modern, minimalist blog built with React, Next.js, and TypeScript, deployed on GitHub Pages.
 
 ## Features
 
-- Clean, minimal design
-- Dark mode support
-- Markdown blog posts with syntax highlighting
-- Responsive layout
-- Built with TypeScript for type safety
-- Styled with Tailwind CSS
+- Clean, responsive design with Tailwind CSS
+- Markdown-based content
+- Tag filtering
+- Code syntax highlighting
+- GitHub Pages integration
+
+## Content Management
+
+This blog features an automated content workflow:
+
+1. Add Markdown files to `content/_incoming/`
+2. Receive Slack notifications for approval
+3. Approve to process and deploy automatically
+
+For detailed instructions, see [CONTENT_WORKFLOW.md](CONTENT_WORKFLOW.md).
 
 ## Development
 
-To run this project locally:
+### Prerequisites
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/harsha-gouru/harsha-gouru.github.io.git
-   cd harsha-gouru.github.io/my-app
-   ```
+- Node.js (v14+)
+- npm or yarn
 
-2. Install dependencies:
-   ```bash
-   yarn install
-   ```
+### Local Development
 
-3. Start the development server:
-   ```bash
-   yarn start
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-## Deployment
-
-The blog is automatically deployed to GitHub Pages when changes are pushed to the main branch.
-
-To deploy manually:
+To run the blog locally:
 
 ```bash
-yarn deploy
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 ```
 
-## Adding Blog Posts
+### Deployment
 
-Blog posts are written in Markdown format and stored in the `src/content` directory. To add a new post:
+The blog uses GitHub Pages for deployment:
 
-1. Create a new `.md` file in the `src/content` directory
-2. Add the post content using Markdown
-3. Update the blog page to include the new post
+```bash
+# Build and deploy to GitHub Pages
+npm run deploy
+```
 
-## Technologies Used
+## Folder Structure
 
-- React
-- TypeScript
-- Tailwind CSS
-- React Router
-- React Markdown
-- Syntax Highlighting
-- GitHub Pages
+```
+/
+├── public/               # Static assets and built files
+├── src/                  # Source code
+│   ├── components/       # React components
+│   ├── content/          # Blog post content
+│   └── pages/            # Page components
+├── content/              # Content management
+│   ├── _incoming/        # Drop new posts here
+│   └── _processed/       # Archive of processed posts
+├── scripts/              # Utility scripts
+├── .github/              # GitHub configuration
+│   └── workflows/        # GitHub Actions workflows
+└── logs/                 # Processing and deployment logs
+```
+
+## Customization
+
+To customize the blog:
+- Edit `src/components/Layout.tsx` for layout changes
+- Modify styles in `src/index.css` and component files
+- Update site metadata in `public/index.html`
+
+## Credits
+
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [GitHub Pages](https://pages.github.com/)
 
 ## License
 

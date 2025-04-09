@@ -1,0 +1,141 @@
+name: Deploy Blog Content
+
+on:
+  # Manual trigger with inputs
+  workflow_dispatch:
+    inputs:
+      skip_notifications:
+        description: 'Skip Slack notifications?'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  process_and_deploy:
+    runs-on: ubuntu-latest
+    name: Process Content and Deploy
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Process incoming content
+        id: process_content
+        run: |
+          PROCESSED_COUNT=0
+          mkdir -p logs/deployments
+          DEPLOYMENT_LOG="logs/deployments/deploy-$(date '+%Y%m%d-%H%M%S').log"
+          echo "Deployment started at $(date '+%Y-%m-%d %H:%M:%S')" > $DEPLOYMENT_LOG
+          
+          # Check if there are any files to process
+          if [ -z "$(ls -A content/_incoming/*.md 2>/dev/null)" ]; then
+            echo "No Markdown files found in _incoming directory."
+            echo "No files to process." >> $DEPLOYMENT_LOG
+            echo "processed_count=0" >> $GITHUB_OUTPUT
+            echo "has_processed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Process each file
+          for FILE in content/_incoming/*.md; do
+            FILENAME=$(basename "$FILE")
+            POST_ID="${FILENAME%.md}"
+            TITLE=$(head -n 1 "$FILE" | sed 's/# //')
+            
+            echo "Processing: $TITLE ($FILENAME)" >> $DEPLOYMENT_LOG
+            
+            # Copy file to src/content and public/content
+            cp "$FILE" "src/content/$FILENAME"
+            cp "$FILE" "public/content/$FILENAME"
+            
+            echo "✅ Copied to src/content and public/content" >> $DEPLOYMENT_LOG
+            
+            # Update Home.tsx to include new post
+            if ! grep -q "$POST_ID" src/components/Home.tsx; then
+              sed -i "/const postModules = \[/a \ \ \ \ \ \ \ \ { id: '$POST_ID', path: \`\${process.env.PUBLIC_URL}/content/$FILENAME\` }," src/components/Home.tsx
+              echo "✅ Added to Home.tsx post list" >> $DEPLOYMENT_LOG
+            else
+              echo "⚠️ Post already exists in Home.tsx" >> $DEPLOYMENT_LOG
+            fi
+            
+            # Move processed file to archive
+            mkdir -p content/_processed
+            mv "$FILE" "content/_processed/$FILENAME"
+            echo "✅ Moved to processed directory" >> $DEPLOYMENT_LOG
+            
+            PROCESSED_COUNT=$((PROCESSED_COUNT + 1))
+            echo "-----------------------" >> $DEPLOYMENT_LOG
+          done
+          
+          echo "processed_count=$PROCESSED_COUNT" >> $GITHUB_OUTPUT
+          
+          if [ $PROCESSED_COUNT -gt 0 ]; then
+            echo "has_processed=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_processed=false" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "Deployment finished at $(date '+%Y-%m-%d %H:%M:%S')" >> $DEPLOYMENT_LOG
+          echo "Total processed: $PROCESSED_COUNT files" >> $DEPLOYMENT_LOG
+      
+      - name: Build and deploy
+        if: steps.process_content.outputs.has_processed == 'true'
+        run: |
+          # Build and deploy using gh-pages
+          npm run deploy
+          echo "✅ Site built and deployed at $(date '+%Y-%m-%d %H:%M:%S')" >> logs/deployments/deploy-$(date '+%Y%m%d-%H%M%S').log
+      
+      - name: Commit changes to repository
+        if: steps.process_content.outputs.has_processed == 'true'
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add src/content/ public/content/ content/_processed/ logs/ src/components/Home.tsx
+          git commit -m "Process and deploy new content [skip ci]" || echo "No changes to commit"
+          git push
+      
+      - name: Send Slack deployment notification
+        if: steps.process_content.outputs.has_processed == 'true' && inputs.skip_notifications != 'true'
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "Blog content has been deployed",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Blog Content Deployed Successfully"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Processed and deployed *${{ steps.process_content.outputs.processed_count }}* new blog posts."
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "View your updated blog at <https://harsha-gouru.github.io/|harsha-gouru.github.io>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK 

@@ -1,62 +1,95 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import BlogPost from './BlogPost';
 import TagList from './TagList';
 
 interface Post {
+  id: string;
   title: string;
   date: string;
   content: string;
-  excerpt: string;
-  tags: string[];
+  excerpt?: string;
+  tags?: string[];
   readingTime: string;
 }
 
-const samplePosts: Post[] = [
-  {
-    title: 'The Art of Minimalism in Web Design',
-    date: '2024-04-08',
-    content: '# The Art of Minimalism in Web Design\n\nMinimalism in web design is more than just a visual style...',
-    excerpt: 'Exploring how minimalism in web design can enhance user experience and content clarity.',
-    tags: ['Design', 'Web', 'UX'],
-    readingTime: '5 min read'
-  },
-  {
-    title: 'Building with TypeScript and React',
-    date: '2024-04-07',
-    content: '# Building with TypeScript and React\n\nTypeScript has become an essential tool...',
-    excerpt: 'A deep dive into using TypeScript with React for better development experience.',
-    tags: ['TypeScript', 'React', 'Development'],
-    readingTime: '8 min read'
-  },
-  {
-    title: 'The Power of White Space',
-    date: '2024-04-06',
-    content: '# The Power of White Space\n\nWhite space, or negative space...',
-    excerpt: 'Understanding how white space can improve readability and visual hierarchy.',
-    tags: ['Design', 'Typography', 'UX'],
-    readingTime: '6 min read'
-  }
-];
-
 const Home: React.FC = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        // For GitHub Pages, we need to use relative paths
+        const postModules = [
+          { id: 'hello-world', path: `${process.env.PUBLIC_URL}/content/hello-world.md` },
+          { id: 'quantum-computing-basics', path: `${process.env.PUBLIC_URL}/content/quantum-computing-basics.md` },
+          { id: 'modern-web-development', path: `${process.env.PUBLIC_URL}/content/modern-web-development.md` },
+          { id: 'javascript-best-practices', path: `${process.env.PUBLIC_URL}/content/javascript-best-practices.md` }
+        ];
+
+        const postsData = await Promise.all(
+          postModules.map(async (module) => {
+            try {
+              const response = await fetch(module.path);
+              const content = await response.text();
+              
+              // Simple parser for frontmatter and content
+              const title = content.match(/# (.*)/)?.[1] || 'Untitled Post';
+              
+              // Get date from filename or use current date
+              const date = new Date().toISOString();
+              
+              // Get tags from content (simple implementation)
+              const tagsMatch = content.match(/\*\*(.*?)\*\*/g);
+              const tags = tagsMatch ? 
+                Array.from(new Set(tagsMatch.map(tag => tag.replace(/\*\*/g, '')))) : 
+                [];
+              
+              return {
+                id: module.id,
+                title,
+                date,
+                content,
+                excerpt: content.split('\n\n')[1] || '',
+                tags,
+                readingTime: `${Math.ceil(content.length / 1000)} min read`
+              };
+            } catch (error) {
+              console.error(`Error loading post ${module.id}:`, error);
+              return null;
+            }
+          })
+        );
+
+        setPosts(postsData.filter(Boolean) as Post[]);
+      } catch (error) {
+        console.error('Failed to load posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const tags = useMemo(() => {
     const tagCounts: { [key: string]: number } = {};
-    samplePosts.forEach(post => {
-      post.tags.forEach(tag => {
+    posts.forEach(post => {
+      post.tags?.forEach(tag => {
         tagCounts[tag] = (tagCounts[tag] || 0) + 1;
       });
     });
     return Object.entries(tagCounts).map(([name, count]) => ({ name, count }));
-  }, []);
+  }, [posts]);
 
   const filteredPosts = useMemo(() => {
-    if (selectedTags.length === 0) return samplePosts;
-    return samplePosts.filter(post =>
-      selectedTags.every(tag => post.tags.includes(tag))
+    if (selectedTags.length === 0) return posts;
+    return posts.filter(post =>
+      selectedTags.every(tag => post.tags?.includes(tag))
     );
-  }, [selectedTags]);
+  }, [selectedTags, posts]);
 
   const handleTagSelect = (tag: string) => {
     setSelectedTags(prev =>
@@ -67,45 +100,58 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 md:px-8 py-16">
-      <header className="mb-24">
-        <h1 className="text-3xl md:text-4xl font-normal tracking-normal text-warm-gray-900 mb-8">
-          Notes on Design & Development
+    <div className="container-base py-16">
+      <section className="section-spacing">
+        <h1 className="heading-1">
+          Welcome to My Blog
         </h1>
-        <p className="text-warm-gray-600 tracking-normal leading-relaxed max-w-xl">
-          Exploring the intersection of minimalist design, web development, and user experience.
-          Here you'll find my thoughts, experiments, and learnings.
+        <p className="body-large">
+          Exploring web development, quantum computing, and technology insights.
         </p>
-      </header>
+      </section>
 
-      <TagList
-        tags={tags}
-        selectedTags={selectedTags}
-        onTagSelect={handleTagSelect}
-      />
+      <section className="section-spacing">
+        <h2 className="heading-2">
+          Latest Posts
+        </h2>
 
-      <div className="divide-y divide-warm-gray-200">
-        {filteredPosts.map((post, index) => (
-          <div 
-            key={post.title}
-            className={`
-              py-16 first:pt-0 
-              ${index === 0 ? 'lg:pt-0' : ''} 
-              ${index === filteredPosts.length - 1 ? 'border-b border-warm-gray-200' : ''}
-              hover:bg-warm-gray-50/50 transition-colors duration-300
-            `}
-          >
-            <BlogPost
-              {...post}
-              isPreview
-            />
+        {loading ? (
+          <div className="animate-pulse">
+            <div className="h-8 bg-warm-gray-100 rounded mb-4 w-3/4"></div>
+            <div className="h-4 bg-warm-gray-100 rounded mb-2 w-1/4"></div>
+            <div className="h-4 bg-warm-gray-100 rounded mb-6 w-1/2"></div>
+            <div className="h-24 bg-warm-gray-100 rounded"></div>
           </div>
-        ))}
-      </div>
+        ) : (
+          <div className="space-y-20">
+            {filteredPosts.map((post) => (
+              <Link to={`/blog/${post.id}`} key={post.id} className="block">
+                <BlogPost
+                  title={post.title}
+                  date={post.date}
+                  content={post.content}
+                  excerpt={post.excerpt}
+                  tags={post.tags}
+                  readingTime={post.readingTime}
+                  isPreview={true}
+                />
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="section-spacing">
+        <TagList
+          tags={tags}
+          selectedTags={selectedTags}
+          onTagSelect={handleTagSelect}
+        />
+      </section>
 
       {filteredPosts.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-warm-gray-500 tracking-wide">
+          <p className="body-normal">
             No posts found with the selected tags.
           </p>
         </div>

@@ -1,0 +1,152 @@
+name: Blog Content Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/_incoming/**'
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  process_content:
+    runs-on: ubuntu-latest
+    name: Process New Content
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Check for new content
+        id: check_content
+        run: |
+          NEW_FILES=$(find content/_incoming -type f -name "*.md" | wc -l)
+          echo "new_files_count=$NEW_FILES" >> $GITHUB_OUTPUT
+          if [ $NEW_FILES -gt 0 ]; then
+            echo "found_new_content=true" >> $GITHUB_OUTPUT
+            FILENAMES=$(find content/_incoming -type f -name "*.md" -exec basename {} \; | tr '\n' ' ')
+            echo "new_file_names=$FILENAMES" >> $GITHUB_OUTPUT
+          else
+            echo "found_new_content=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Extract content metadata
+        if: steps.check_content.outputs.found_new_content == 'true'
+        id: extract_metadata
+        run: |
+          # Create a JSON array of post metadata for Slack notification
+          echo "POSTS_JSON<<EOF" >> $GITHUB_ENV
+          echo "[" >> $GITHUB_ENV
+          FIRST=true
+          for FILE in content/_incoming/*.md; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              echo "," >> $GITHUB_ENV
+            fi
+            TITLE=$(head -n 1 "$FILE" | sed 's/# //')
+            FILENAME=$(basename "$FILE")
+            CREATED=$(date '+%Y-%m-%d')
+            PREVIEW=$(sed -n '3,5p' "$FILE" | tr '\n' ' ' | cut -c 1-100)..."
+            
+            echo "{" >> $GITHUB_ENV
+            echo "  \"title\": \"$TITLE\"," >> $GITHUB_ENV
+            echo "  \"filename\": \"$FILENAME\"," >> $GITHUB_ENV
+            echo "  \"created\": \"$CREATED\"," >> $GITHUB_ENV
+            echo "  \"preview\": \"$PREVIEW\"" >> $GITHUB_ENV
+            echo "}" >> $GITHUB_ENV
+          done
+          echo "]" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
+      - name: Send Slack notification
+        if: steps.check_content.outputs.found_new_content == 'true'
+        id: slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "New blog content available for review",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚨 New Blog Content Available"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Found *${{ steps.check_content.outputs.new_files_count }}* new post(s) in the incoming folder:\n*${{ steps.check_content.outputs.new_file_names }}*"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Do you want to process and deploy this content?"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "✅ Approve & Deploy"
+                      },
+                      "style": "primary",
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/workflows/content-deployment.yml"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "❌ Skip for now"
+                      },
+                      "style": "danger",
+                      "url": "${{ github.server_url }}/${{ github.repository }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      
+      - name: Generate content log
+        if: steps.check_content.outputs.found_new_content == 'true'
+        run: |
+          mkdir -p logs
+          for FILE in content/_incoming/*.md; do
+            FILENAME=$(basename "$FILE")
+            TITLE=$(head -n 1 "$FILE" | sed 's/# //')
+            TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+            echo "[$TIMESTAMP] Detected new post: \"$TITLE\" ($FILENAME)" >> logs/content_history.log
+          done
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add logs/content_history.log
+          git commit -m "Update content log with new posts" || echo "No changes to commit"
+          git push 

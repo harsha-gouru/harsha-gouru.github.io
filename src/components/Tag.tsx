@@ -16,11 +16,11 @@ const Tag: React.FC<TagProps> = ({
   isSelected = false,
   onClick 
 }) => {
-  const baseClasses = "inline-flex items-center text-sm tracking-wider py-1 px-3 rounded-sm transition-colors duration-300";
+  const baseClasses = "inline-flex items-center text-sm tracking-wider py-1 px-3 rounded-md transition-colors duration-300";
   const buttonClasses = isSelected
-    ? "bg-warm-gray-900 text-warm-gray-50"
-    : "bg-warm-gray-100 text-warm-gray-700 hover:bg-warm-gray-200";
-  const linkClasses = "text-warm-gray-600 hover:text-warm-gray-900";
+    ? "btn-primary"
+    : "btn-secondary";
+  const linkClasses = "border border-warm-gray-200 text-warm-gray-600 hover:text-warm-gray-900 hover:border-warm-gray-400";
 
   if (isButton) {
     return (

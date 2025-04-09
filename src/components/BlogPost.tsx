@@ -31,25 +31,27 @@ const BlogPost: React.FC<BlogPostProps> = ({
 
   return (
     <article className={`prose ${isPreview ? 'group cursor-pointer' : ''}`}>
-      <header className="mb-10">
-        <div className="flex items-center space-x-4 text-sm text-warm-gray-400 tracking-wide mb-4">
+      <header className="mb-8">
+        <div className="flex items-center body-small mb-3">
           <time dateTime={date} className="transition-colors duration-300 group-hover:text-warm-gray-600">
             {formattedDate}
           </time>
           {readingTime && (
             <>
-              <span className="text-warm-gray-200">•</span>
+              <span className="mx-2 text-warm-gray-300">•</span>
               <span className="transition-colors duration-300 group-hover:text-warm-gray-600">
                 {readingTime}
               </span>
             </>
           )}
         </div>
-        <h1 className={`font-normal tracking-tighter mb-4 transition-colors duration-300 ${isPreview ? 'group-hover:text-warm-gray-700' : ''}`}>
+        
+        <h1 className={`heading-1 mb-4 transition-colors duration-300 ${isPreview ? 'group-hover:text-warm-gray-700' : ''}`}>
           {title}
         </h1>
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+        
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
             {tags.map(tag => (
               <Tag key={tag} name={tag} />
             ))}
@@ -67,7 +69,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
                   style={vs as any}
                   language={match[1]}
                   PreTag="div"
-                  className="!bg-warm-gray-50 !border !border-warm-gray-200 !rounded-sm !text-warm-gray-800"
+                  className="!bg-warm-gray-50 !border !border-warm-gray-200 !rounded-sm !text-warm-gray-800 my-8"
                 >
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
@@ -78,19 +80,34 @@ const BlogPost: React.FC<BlogPostProps> = ({
               );
             },
             p: ({ children }) => (
-              <p className="text-warm-gray-600 tracking-normal leading-relaxed transition-colors duration-300 group-hover:text-warm-gray-700">
+              <p className="body-normal my-6 transition-colors duration-300 group-hover:text-warm-gray-700">
                 {children}
               </p>
             ),
             h2: ({ children }) => (
-              <h2 className="text-xl md:text-2xl font-normal text-warm-gray-800 tracking-normal mt-12 mb-6">
+              <h2 className="heading-2 mt-12">
                 {children}
               </h2>
             ),
             h3: ({ children }) => (
-              <h3 className="text-lg md:text-xl font-normal text-warm-gray-800 tracking-normal mt-8 mb-4">
+              <h3 className="heading-3 mt-8">
                 {children}
               </h3>
+            ),
+            ul: ({ children }) => (
+              <ul className="my-6 space-y-2 text-warm-gray-700">
+                {children}
+              </ul>
+            ),
+            ol: ({ children }) => (
+              <ol className="my-6 space-y-2 text-warm-gray-700">
+                {children}
+              </ol>
+            ),
+            blockquote: ({ children }) => (
+              <blockquote className="border-l-2 border-warm-gray-300 pl-6 my-8 italic text-warm-gray-600">
+                {children}
+              </blockquote>
             ),
           }}
         >
@@ -99,9 +116,9 @@ const BlogPost: React.FC<BlogPostProps> = ({
       </div>
 
       {isPreview && (
-        <footer>
+        <footer className="mt-8 pt-4 border-t border-warm-gray-100">
           <span
-            className="inline-flex items-center space-x-2 text-warm-gray-500 tracking-wide group-hover:text-warm-gray-900 transition-colors duration-300"
+            className="inline-flex items-center space-x-2 btn-secondary px-4 py-2"
           >
             <span>Continue reading</span>
             <span className="transform transition-transform group-hover:translate-x-1">→</span>
