@@ -25,11 +25,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '18'
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci --no-cache || npm install --no-cache
+        run: |
+          npm ci --no-cache || npm install --no-cache
         
       - name: Check for new content
         id: check_content
@@ -44,7 +45,36 @@ jobs:
             echo "found_new_content=false" >> $GITHUB_OUTPUT
           fi
       
-      - name: Process content directly
+      - name: Extract content metadata
+        if: steps.check_content.outputs.found_new_content == 'true'
+        id: extract_metadata
+        run: |
+          # Create a temporary JSON array for post metadata
+          TEMP_FILE=$(mktemp)
+          echo "[" > $TEMP_FILE
+          FIRST=true
+          for FILE in content/_incoming/*.md; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              echo "," >> $TEMP_FILE
+            fi
+            TITLE=$(head -n 1 "$FILE" | sed 's/# //')
+            FILENAME=$(basename "$FILE")
+            CREATED=$(date '+%Y-%m-%d')
+            PREVIEW=$(sed -n '3,5p' "$FILE" | tr '\n' ' ' | cut -c 1-100)
+            echo "{" >> $TEMP_FILE
+            echo "  \"title\": \"$TITLE\"," >> $TEMP_FILE
+            echo "  \"filename\": \"$FILENAME\"," >> $TEMP_FILE
+            echo "  \"created\": \"$CREATED\"," >> $TEMP_FILE
+            echo "  \"preview\": \"$PREVIEW\"" >> $TEMP_FILE
+            echo "}" >> $TEMP_FILE
+          done
+          echo "]" >> $TEMP_FILE
+          echo "POSTS_JSON=$(cat $TEMP_FILE)" >> $GITHUB_ENV
+          rm $TEMP_FILE
+      
+      - name: Process content
         if: steps.check_content.outputs.found_new_content == 'true'
         run: |
           # Run the process-incoming.js script
