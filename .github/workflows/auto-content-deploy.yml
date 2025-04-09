@@ -60,12 +60,6 @@ jobs:
             echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           fi
       
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
-      
       - name: Build
         run: npm run build
       
