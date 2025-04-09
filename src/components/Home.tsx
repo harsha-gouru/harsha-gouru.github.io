@@ -23,6 +23,7 @@ const Home: React.FC = () => {
       try {
         // For GitHub Pages, we need to use relative paths
         const postModules = [
+        { id: 'sample-post', path: `${process.env.PUBLIC_URL}/content/sample-post.md` },
           { id: 'hello-world', path: `${process.env.PUBLIC_URL}/content/hello-world.md` },
           { id: 'quantum-computing-basics', path: `${process.env.PUBLIC_URL}/content/quantum-computing-basics.md` },
           { id: 'modern-web-development', path: `${process.env.PUBLIC_URL}/content/modern-web-development.md` },

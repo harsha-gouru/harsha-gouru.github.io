@@ -1,0 +1,8 @@
+Deployment started at 2025-04-09 19:51:12
+Processing: Using the Automated Blog Workflow (sample-post.md)
+✅ Copied to src/content and public/content
+✅ Added to Home.tsx post list
+✅ Moved to processed directory
+-----------------------
+Deployment finished at 2025-04-09 19:51:12
+Total processed: 1 files
