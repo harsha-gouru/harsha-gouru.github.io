@@ -88,7 +88,7 @@ jobs:
                         "text": "Deploy Now"
                       },
                       "style": "primary",
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/workflows/deploy.yml"
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/workflows/deploy.yml/dispatch"
                     },
                     {
                       "type": "button",
