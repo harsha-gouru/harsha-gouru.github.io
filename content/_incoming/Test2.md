@@ -1,4 +1,4 @@
-Unlocking the Power of Vector Databases in the Era of AI
+### Unlocking the Power of Vector Databases in the Era of AI
 In the world of AI and machine learning, data is king—but not all data is created equal. Traditional databases are great at storing structured, tabular data. But what if your data looks like this?
 
 A photo of a cat
