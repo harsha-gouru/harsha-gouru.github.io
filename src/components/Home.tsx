@@ -100,62 +100,90 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="container-base py-16">
-      <section className="section-spacing">
-        <h1 className="heading-1">
-          Welcome to My Blog
-        </h1>
-        <p className="body-large">
-          Exploring web development, quantum computing, and technology insights.
-        </p>
+    <div className="max-w-5xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <section className="mb-16">
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-2xl p-8 shadow-xl">
+          <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
+            Tech & AI Explorations
+          </h1>
+          <p className="text-xl text-slate-300 leading-relaxed mb-8 max-w-3xl">
+            Navigating the intersection of quantum computing, web development, and artificial intelligence. 
+            Join me on this journey through the digital frontier.
+          </p>
+          <div className="flex space-x-4 mb-2">
+            <div className="inline-flex items-center px-3 py-2 border border-cyan-500 rounded-full text-sm text-cyan-400 bg-slate-800 mt-2 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2">
+                <path d="M13 7L11 7v2h2v2h-2v2h2v2h-2v2h2a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2z"/>
+                <path d="M7 9h2V7H7v2zm0 6h2v-2H7v2zm14-8v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2zm-2 0H5v10h14V7z"/>
+              </svg>
+              <span>Quantum Computing</span>
+            </div>
+            <div className="inline-flex items-center px-3 py-2 border border-purple-500 rounded-full text-sm text-purple-400 bg-slate-800 mt-2 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2">
+                <path d="M12 16.54L19.37 10.8L21 12.07L12 19.07L3 12.07L4.62 10.81L12 16.54Z"/>
+                <path d="M12 14L3 7L12 0L21 7L12 14ZM12 2.53L6.26 7L12 11.47L17.74 7L12 2.53Z"/>
+              </svg>
+              <span>Web Development</span>
+            </div>
+            <div className="inline-flex items-center px-3 py-2 border border-blue-500 rounded-full text-sm text-blue-400 bg-slate-800 mt-2 shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 mr-2">
+                <path d="M21,16V4H3V16H21M21,2A2,2 0 0,1 23,4V16A2,2 0 0,1 21,18H14V20H16V22H8V20H10V18H3A2,2 0 0,1 1,16V4A2,2 0 0,1 3,2H21M5,6H14V10H5V6M5,12H9V14H5V12M10,12H14V14H10V12M15,6H19V14H15V6Z"/>
+              </svg>
+              <span>Artificial Intelligence</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section className="section-spacing">
-        <h2 className="heading-2">
-          Latest Posts
-        </h2>
+      <section>
+        <div className="flex items-center mb-8">
+          <h2 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-cyan-600 to-purple-600 text-transparent bg-clip-text">
+            Latest Insights
+          </h2>
+          <div className="h-px flex-grow bg-gradient-to-r from-cyan-500/30 to-purple-500/30 ml-4"></div>
+        </div>
 
         {loading ? (
-          <div className="animate-pulse">
-            <div className="h-8 bg-warm-gray-100 rounded mb-4 w-3/4"></div>
-            <div className="h-4 bg-warm-gray-100 rounded mb-2 w-1/4"></div>
-            <div className="h-4 bg-warm-gray-100 rounded mb-6 w-1/2"></div>
-            <div className="h-24 bg-warm-gray-100 rounded"></div>
+          <div className="animate-pulse space-y-8">
+            <div className="h-8 bg-slate-200 rounded-md mb-4 w-3/4"></div>
+            <div className="h-4 bg-slate-200 rounded-md mb-2 w-1/4"></div>
+            <div className="h-4 bg-slate-200 rounded-md mb-6 w-1/2"></div>
+            <div className="h-24 bg-slate-200 rounded-md"></div>
           </div>
         ) : (
-          <div className="space-y-20">
-            {filteredPosts.map((post) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {filteredPosts.map((post, index) => (
               <Link to={`/blog/${post.id}`} key={post.id} className="block">
-                <BlogPost
-                  title={post.title}
-                  date={post.date}
-                  content={post.content}
-                  excerpt={post.excerpt}
-                  tags={post.tags}
-                  readingTime={post.readingTime}
-                  isPreview={true}
-                />
+                <div className="group h-full p-6 rounded-lg border border-slate-200 hover:border-cyan-300 hover:shadow-lg hover:shadow-cyan-100/20 transition-all duration-300 bg-white backdrop-blur-sm">
+                  <BlogPost
+                    title={post.title}
+                    date={post.date}
+                    content={post.content}
+                    excerpt={post.excerpt}
+                    tags={post.tags}
+                    readingTime={post.readingTime}
+                    isPreview={true}
+                  />
+                </div>
               </Link>
             ))}
           </div>
         )}
       </section>
 
-      <section className="section-spacing">
+      <section className="mt-16 pt-8 border-t border-slate-200">
+        <div className="flex items-center mb-6">
+          <h2 className="text-xl font-semibold tracking-tight bg-gradient-to-r from-cyan-600 to-purple-600 text-transparent bg-clip-text">
+            Explore by Topic
+          </h2>
+          <div className="h-px flex-grow bg-gradient-to-r from-cyan-500/30 to-purple-500/30 ml-4"></div>
+        </div>
         <TagList
           tags={tags}
           selectedTags={selectedTags}
           onTagSelect={handleTagSelect}
         />
       </section>
-
-      {filteredPosts.length === 0 && (
-        <div className="text-center py-16">
-          <p className="body-normal">
-            No posts found with the selected tags.
-          </p>
-        </div>
-      )}
     </div>
   );
 };

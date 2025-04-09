@@ -2,159 +2,147 @@ import React from 'react';
 
 const About: React.FC = () => {
   return (
-    <div className="container-base py-16">
-      <section className="section-spacing text-center">
-        <h1 className="heading-1 bg-gradient-text">
-          About Me
-        </h1>
-        <img
-          src="https://github.com/harsha-gouru.png"
-          alt="Harsha Gouru"
-          className="w-48 h-48 rounded-full mx-auto mb-8 border-4 border-warm-gray-300"
-        />
-        <p className="body-large">
-          Hi, I'm Harsha! I'm a passionate software engineer who loves building things for the web.
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <h1 className="text-3xl font-bold text-slate-900 mb-6">About Me</h1>
+      
+      <div className="prose prose-slate max-w-none">
+        <p className="text-lg text-slate-700 leading-relaxed mb-8">
+          Hi, I'm Harsha! I'm a software developer and technology enthusiast with a passion for quantum computing, 
+          web development, and artificial intelligence.
         </p>
-      </section>
-
-      <section className="section-spacing prose prose-lg max-w-none">
-        <h2 className="heading-2">
-          My Journey
-        </h2>
-        <p className="body-normal">
-          I started my journey in software development during my college years, where I discovered
-          my passion for creating web applications. Since then, I've been constantly learning and
-          exploring new technologies to improve my skills.
-        </p>
-        <p className="body-normal">
-          Currently, I'm focused on modern web development technologies like React, TypeScript,
-          and Node.js. I believe in writing clean, maintainable code and creating intuitive user
-          experiences.
-        </p>
-
-        <h2 className="heading-2">
-          What I Do
-        </h2>
-        <ul className="space-y-2">
-          <li className="body-normal">Frontend Development with React and TypeScript</li>
-          <li className="body-normal">Backend Development with Node.js</li>
-          <li className="body-normal">Database Design and Implementation</li>
-          <li className="body-normal">API Development and Integration</li>
-          <li className="body-normal">Technical Writing and Documentation</li>
-        </ul>
-
-        <h2 className="heading-2">
-          Beyond Coding
-        </h2>
-        <p className="body-normal">
-          When I'm not coding, you can find me reading tech blogs, contributing to open-source
-          projects, or exploring new tools and frameworks. I also enjoy sharing my knowledge
-          through writing and helping others learn programming.
-        </p>
-      </section>
-
-      <section className="section-spacing grid md:grid-cols-2 gap-8">
-        <div className="card">
-          <h2 className="heading-3">
-            Skills
-          </h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="heading-4">
-                Frontend
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'HTML/CSS'].map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1 rounded-full bg-warm-gray-100 text-warm-gray-700 text-sm"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+        
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-10">
+          <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2"></div>
+          <div className="p-6">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">My Tech Journey</h2>
+            <p className="mb-4">
+              I began my journey in technology by exploring web development, creating websites and applications 
+              that solve real-world problems. Over time, my interests expanded to include quantum computing and its 
+              potential applications in optimization and machine learning.
+            </p>
+            <p>
+              Today, I continue to explore the intersection of these fields, seeking innovative ways to leverage 
+              quantum principles in practical software solutions.
+            </p>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2"></div>
+            <div className="p-6">
+              <h2 className="text-xl font-semibold text-slate-900 mb-3">Technical Skills</h2>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-indigo-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                  </svg>
+                  Web Development (React, TypeScript, Node.js)
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-indigo-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                  </svg>
+                  Quantum Computing (Qiskit, Pennylane)
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-indigo-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                  </svg>
+                  Machine Learning & AI (TensorFlow, PyTorch)
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-indigo-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
+                  </svg>
+                  Cloud Services (AWS, Azure)
+                </li>
+              </ul>
             </div>
-            <div>
-              <h3 className="heading-4">
-                Backend
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {['Node.js', 'Express', 'PostgreSQL', 'MongoDB', 'REST APIs'].map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1 rounded-full bg-warm-gray-100 text-warm-gray-700 text-sm"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 h-2"></div>
+            <div className="p-6">
+              <h2 className="text-xl font-semibold text-slate-900 mb-3">Current Interests</h2>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-orange-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+                  </svg>
+                  Quantum Machine Learning
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-orange-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+                  </svg>
+                  Modern Frontend Frameworks
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-orange-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+                  </svg>
+                  Serverless Architectures
+                </li>
+                <li className="flex items-center">
+                  <svg className="w-5 h-5 text-orange-500 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
+                  </svg>
+                  Edge Computing
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-
-        <div className="card">
-          <h2 className="heading-3">
-            Get in Touch
-          </h2>
-          <p className="body-normal mb-6">
-            I'm always open to new opportunities and collaborations. Feel free to reach out!
+        
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl shadow-md overflow-hidden text-white mb-10">
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Why I Blog</h2>
+            <p className="mb-4">
+              This blog serves as a platform to share my learnings, experiments, and insights with the broader 
+              tech community. Writing helps me solidify my understanding and potentially helps others facing 
+              similar challenges.
+            </p>
+            <p>
+              I believe in the power of open knowledge exchange to accelerate innovation and discovery in 
+              technology.
+            </p>
+          </div>
+        </div>
+        
+        <div className="border-t border-slate-200 pt-8">
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">Get in Touch</h2>
+          <p className="mb-6">
+            I'm always interested in connecting with fellow technologists, researchers, and curious minds. 
+            Whether you have questions about my work, ideas for collaboration, or just want to say hello, 
+            feel free to reach out!
           </p>
-          <div className="space-y-4">
-            <a
-              href="https://github.com/harsha-gouru"
-              target="_blank"
+          <div className="flex space-x-4">
+            <a 
+              href="https://github.com/harsha-gouru" 
+              target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
+              className="px-4 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors"
             >
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12" />
-              </svg>
               GitHub
             </a>
-            <a
-              href="https://linkedin.com/in/harsha-gouru"
-              target="_blank"
+            <a 
+              href="https://linkedin.com/in/harsha-gouru" 
+              target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
+              className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors"
             >
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-              </svg>
               LinkedIn
             </a>
-            <a
+            <a 
               href="mailto:harsha.gouru@example.com"
-              className="flex items-center text-warm-gray-700 hover:text-warm-gray-900 transition-colors duration-300"
+              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
             >
-              <svg
-                className="w-6 h-6 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
               Email
             </a>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

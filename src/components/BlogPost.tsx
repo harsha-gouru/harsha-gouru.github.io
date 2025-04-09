@@ -29,24 +29,36 @@ const BlogPost: React.FC<BlogPostProps> = ({
     day: 'numeric'
   });
 
+  // If we're displaying the full post, remove the first heading (title) from content
+  // to avoid duplication since we display the title separately
+  const processedContent = isPreview 
+    ? (excerpt || content.slice(0, 300) + '...') 
+    : content.replace(/^#\s+.*$/m, '').trim();
+
   return (
-    <article className={`prose ${isPreview ? 'group cursor-pointer' : ''}`}>
-      <header className="mb-8">
-        <div className="flex items-center body-small mb-3">
-          <time dateTime={date} className="transition-colors duration-300 group-hover:text-warm-gray-600">
+    <article className={`prose max-w-none ${isPreview ? 'group cursor-pointer' : ''}`}>
+      <header className="mb-6">
+        <div className="flex items-center text-sm text-slate-400 mb-2">
+          <time dateTime={date} className="transition-colors duration-300 group-hover:text-slate-600 flex items-center">
+            <svg className="w-4 h-4 mr-1.5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
             {formattedDate}
           </time>
           {readingTime && (
             <>
-              <span className="mx-2 text-warm-gray-300">•</span>
-              <span className="transition-colors duration-300 group-hover:text-warm-gray-600">
+              <span className="mx-2 text-slate-300">•</span>
+              <span className="transition-colors duration-300 group-hover:text-slate-600 flex items-center">
+                <svg className="w-4 h-4 mr-1.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 {readingTime}
               </span>
             </>
           )}
         </div>
         
-        <h1 className={`heading-1 mb-4 transition-colors duration-300 ${isPreview ? 'group-hover:text-warm-gray-700' : ''}`}>
+        <h1 className={`font-bold text-2xl ${isPreview ? 'md:text-3xl' : 'md:text-4xl'} tracking-tight mb-4 transition-colors duration-300 ${isPreview ? 'group-hover:text-cyan-700' : 'text-slate-900'}`}>
           {title}
         </h1>
         
@@ -59,7 +71,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
         )}
       </header>
 
-      <div className="mb-10">
+      <div className="mb-10 prose-p:my-4 prose-headings:mt-8 prose-headings:mb-4 prose-headings:font-semibold prose-a:text-cyan-600 hover:prose-a:text-cyan-700 prose-code:text-indigo-600 prose-pre:bg-slate-50 prose-pre:border prose-pre:border-slate-200 prose-pre:shadow-sm">
         <ReactMarkdown
           components={{
             code: ({ className, children }) => {
@@ -69,56 +81,66 @@ const BlogPost: React.FC<BlogPostProps> = ({
                   style={vs as any}
                   language={match[1]}
                   PreTag="div"
-                  className="!bg-warm-gray-50 !border !border-warm-gray-200 !rounded-sm !text-warm-gray-800 my-8"
+                  className="!bg-slate-50 !border !border-slate-200 !rounded-md !text-slate-800 !my-6 !shadow-sm"
                 >
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
               ) : (
-                <code className={`${className} bg-warm-gray-50 text-warm-gray-800 px-2 py-1 rounded-sm`}>
+                <code className={`${className} bg-slate-100 text-indigo-600 px-1.5 py-0.5 rounded-md font-medium`}>
                   {children}
                 </code>
               );
             },
-            p: ({ children }) => (
-              <p className="body-normal my-6 transition-colors duration-300 group-hover:text-warm-gray-700">
-                {children}
-              </p>
-            ),
             h2: ({ children }) => (
-              <h2 className="heading-2 mt-12">
+              <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mt-12 mb-6 pb-2 border-b border-slate-100">
                 {children}
               </h2>
             ),
             h3: ({ children }) => (
-              <h3 className="heading-3 mt-8">
+              <h3 className="text-lg md:text-xl font-semibold text-slate-800 tracking-tight mt-8 mb-4">
                 {children}
               </h3>
             ),
+            p: ({ children }) => (
+              <p className="text-slate-700 leading-relaxed my-4">
+                {children}
+              </p>
+            ),
+            a: ({ href, children }) => (
+              <a 
+                href={href} 
+                className="text-cyan-600 hover:text-cyan-700 transition-colors font-medium underline decoration-cyan-200 decoration-2 underline-offset-2 hover:decoration-cyan-400"
+                target={href?.startsWith('http') ? "_blank" : undefined}
+                rel={href?.startsWith('http') ? "noopener noreferrer" : undefined}
+              >
+                {children}
+              </a>
+            ),
             ul: ({ children }) => (
-              <ul className="my-6 space-y-2 text-warm-gray-700">
+              <ul className="text-slate-700 my-4 pl-6 space-y-2">
                 {children}
               </ul>
             ),
             ol: ({ children }) => (
-              <ol className="my-6 space-y-2 text-warm-gray-700">
+              <ol className="text-slate-700 my-4 pl-6 space-y-2">
                 {children}
               </ol>
             ),
             blockquote: ({ children }) => (
-              <blockquote className="border-l-2 border-warm-gray-300 pl-6 my-8 italic text-warm-gray-600">
+              <blockquote className="border-l-4 border-cyan-300 pl-4 italic my-6 text-slate-600 bg-slate-50/50 py-2 pr-2 rounded-r">
                 {children}
               </blockquote>
             ),
           }}
         >
-          {isPreview ? excerpt || content.slice(0, 300) + '...' : content}
+          {processedContent}
         </ReactMarkdown>
       </div>
 
       {isPreview && (
-        <footer className="mt-8 pt-4 border-t border-warm-gray-100">
+        <footer>
           <span
-            className="inline-flex items-center space-x-2 btn-secondary px-4 py-2"
+            className="inline-flex items-center space-x-2 text-cyan-600 tracking-wide group-hover:text-cyan-700 transition-colors duration-300 font-medium"
           >
             <span>Continue reading</span>
             <span className="transform transition-transform group-hover:translate-x-1">→</span>
