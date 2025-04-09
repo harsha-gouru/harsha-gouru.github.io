@@ -1,10 +1,14 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
-  # Allow manual trigger
+  # Only run on manual trigger or specific commit messages
   workflow_dispatch:
+  push:
+    branches: 
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '.github/workflows/**'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -20,6 +24,8 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # Only run on manual trigger or if commit message contains [deploy]
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3

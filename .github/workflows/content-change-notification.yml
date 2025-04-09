@@ -7,14 +7,16 @@ on:
       - 'content/data/**'
       - 'content/images/**'
       - 'content/_incoming/**'
+    branches:
+      - 'main'
     branches-ignore:
       - 'gh-pages'
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-    # Don't run this workflow if the commit message contains [skip ci] or [deploy]
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[deploy]') }}
+    # Don't run this workflow if the commit message contains [skip ci], [deploy], or [workflow]
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[deploy]') && !contains(github.event.head_commit.message, '[workflow]') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -75,7 +77,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Would you like to deploy these changes?"
+                    "text": "Would you like to process and deploy these changes?"
                   }
                 },
                 {
@@ -85,10 +87,10 @@ jobs:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "Deploy Now"
+                        "text": "Process Content"
                       },
                       "style": "primary",
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/workflows/deploy.yml/dispatch"
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/workflows/blog-content-pipeline.yml/dispatch?inputs[source_commit]=${{ github.sha }}&inputs[source_branch]=${{ github.ref_name }}"
                     },
                     {
                       "type": "button",
