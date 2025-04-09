@@ -1,84 +1,64 @@
-# Personal Blog
+# Harsha's Tech Blog
 
-A modern, minimalist blog built with React, Next.js, and TypeScript, deployed on GitHub Pages.
+A personal blog focused on quantum computing, web development, and artificial intelligence, built with React and deployed on GitHub Pages.
 
 ## Features
 
-- Clean, responsive design with Tailwind CSS
-- Markdown-based content
-- Tag filtering
-- Code syntax highlighting
-- GitHub Pages integration
+- Clean, minimal design with black and white theme
+- Responsive layout for all device sizes
+- Markdown-based content management
+- Tag filtering system
+- Syntax highlighting for code blocks
+- GitHub Pages deployment with automated workflows
 
-## Content Management
+## Technical Stack
 
-This blog features an automated content workflow:
-
-1. Add Markdown files to `content/_incoming/`
-2. Receive Slack notifications for approval
-3. Approve to process and deploy automatically
-
-For detailed instructions, see [CONTENT_WORKFLOW.md](CONTENT_WORKFLOW.md).
+- React.js with TypeScript
+- Tailwind CSS for styling
+- React Router for navigation
+- React Markdown for content rendering
+- GitHub Pages for hosting
+- GitHub Actions for CI/CD
 
 ## Development
 
-### Prerequisites
+For development instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md), which covers:
 
-- Node.js (v14+)
-- npm or yarn
+- Project structure
+- Content management
+- Feature flags system
+- Development workflow
+- Environment variables
 
-### Local Development
+## Deployment
 
-To run the blog locally:
+The site is automatically deployed when changes are merged to the main branch via GitHub Actions.
 
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-### Deployment
-
-The blog uses GitHub Pages for deployment:
+For manual deployment:
 
 ```bash
-# Build and deploy to GitHub Pages
+# Standard deployment
 npm run deploy
+
+# Deployment with pre-checks
+npm run safedeploy
 ```
 
-## Folder Structure
+## Backup & Rollback Strategy
 
-```
-/
-├── public/               # Static assets and built files
-├── src/                  # Source code
-│   ├── components/       # React components
-│   ├── content/          # Blog post content
-│   └── pages/            # Page components
-├── content/              # Content management
-│   ├── _incoming/        # Drop new posts here
-│   └── _processed/       # Archive of processed posts
-├── scripts/              # Utility scripts
-├── .github/              # GitHub configuration
-│   └── workflows/        # GitHub Actions workflows
-└── logs/                 # Processing and deployment logs
-```
+This project has a comprehensive backup and rollback strategy:
 
-## Customization
+1. **Git tags** mark stable versions
+2. **Content separation** keeps content isolated from UI changes
+3. **Feature flags** allow toggling features without code changes
+4. **GitHub Actions** automate deployment
+5. **Pre-deployment checks** validate builds before deployment
 
-To customize the blog:
-- Edit `src/components/Layout.tsx` for layout changes
-- Modify styles in `src/index.css` and component files
-- Update site metadata in `public/index.html`
+For detailed rollback instructions, see [ROLLBACK.md](./ROLLBACK.md).
 
-## Credits
-
-- [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [GitHub Pages](https://pages.github.com/)
+Current stable versions:
+- v1.0-minimal: Minimal design with black/white theme
 
 ## License
 
-MIT
+Copyright © 2023 Harsha Gouru. All rights reserved.
