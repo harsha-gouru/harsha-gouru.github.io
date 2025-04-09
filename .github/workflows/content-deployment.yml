@@ -24,11 +24,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-cache || npm install --no-cache
       
       - name: Process incoming content
         id: process_content
