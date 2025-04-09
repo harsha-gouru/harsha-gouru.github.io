@@ -61,7 +61,7 @@ jobs:
             TITLE=$(head -n 1 "$FILE" | sed 's/# //')
             FILENAME=$(basename "$FILE")
             CREATED=$(date '+%Y-%m-%d')
-            PREVIEW=$(sed -n '3,5p' "$FILE" | tr '\n' ' ' | cut -c 1-100)..."
+            PREVIEW=$(sed -n '3,5p' "$FILE" | tr '\n' ' ' | cut -c 1-100)"..."
             
             echo "{" >> $GITHUB_ENV
             echo "  \"title\": \"$TITLE\"," >> $GITHUB_ENV
@@ -149,4 +149,4 @@ jobs:
           git config --global user.email "actions@github.com"
           git add logs/content_history.log
           git commit -m "Update content log with new posts" || echo "No changes to commit"
-          git push 
+          git push
