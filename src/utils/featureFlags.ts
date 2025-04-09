@@ -47,15 +47,19 @@ export const getAllFeatureFlags = (): Record<FeatureFlag, boolean> => {
  * Feature-gated component wrapper
  * Only renders children if the feature is enabled
  */
-export const FeatureGate: React.FC<{
-  feature: FeatureFlag;
-  fallback?: React.ReactNode;
+export const FeatureGate = ({ 
+  feature, 
+  fallback = null, 
+  children 
+}: { 
+  feature: FeatureFlag; 
+  fallback?: React.ReactNode; 
   children: React.ReactNode;
-}> = ({ feature, fallback = null, children }) => {
+}): React.ReactElement => {
   if (isFeatureEnabled(feature)) {
-    return <>{children}</>;
+    return React.createElement(React.Fragment, null, children);
   }
-  return <>{fallback}</>;
+  return React.createElement(React.Fragment, null, fallback);
 };
 
 export default {
