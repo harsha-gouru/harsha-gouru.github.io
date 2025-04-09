@@ -7,7 +7,7 @@ on:
       skip_notifications:
         description: 'Skip Slack notifications?'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
@@ -89,10 +89,17 @@ jobs:
           echo "Deployment finished at $(date '+%Y-%m-%d %H:%M:%S')" >> $DEPLOYMENT_LOG
           echo "Total processed: $PROCESSED_COUNT files" >> $DEPLOYMENT_LOG
       
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          
       - name: Build and deploy
         if: steps.process_content.outputs.has_processed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Build and deploy using gh-pages
+          # Build and deploy using our custom script
           npm run deploy
           echo "✅ Site built and deployed at $(date '+%Y-%m-%d %H:%M:%S')" >> logs/deployments/deploy-$(date '+%Y%m%d-%H%M%S').log
       
