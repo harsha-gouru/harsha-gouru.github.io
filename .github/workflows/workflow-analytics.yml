@@ -23,7 +23,18 @@ jobs:
           node-version: '18'
           
       - name: Install dependencies
-        run: npm install @octokit/rest @octokit/plugin-retry
+        run: npm install @octokit/rest @octokit/plugin-retry @actions/core
+        
+      - name: Create required labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          # Create workflow-dashboard label if it doesn't exist
+          gh label create workflow-dashboard --color 0366d6 --description "Workflow analytics dashboard" --force
+          gh label create documentation --color 0075ca --description "Documentation related" --force
+          gh label create automated --color d876e3 --description "Automated process" --force
         
       - name: Create analyze script
         run: |
@@ -31,6 +42,7 @@ jobs:
           import { Octokit } from '@octokit/rest';
           import { retry } from '@octokit/plugin-retry';
           import fs from 'fs';
+          import * as core from '@actions/core';
           
           const RetryOctokit = Octokit.plugin(retry);
           const octokit = new RetryOctokit({
@@ -41,26 +53,38 @@ jobs:
           const owner = process.env.REPO_OWNER;
           const repo = process.env.REPO_NAME;
           
+          console.log(`Starting workflow analysis for ${owner}/${repo}`);
+          
           async function getWorkflows() {
-            const { data } = await octokit.actions.listRepoWorkflows({
-              owner,
-              repo
-            });
-            return data.workflows.filter(wf => !wf.name.includes('Analytics'));
+            try {
+              const { data } = await octokit.actions.listRepoWorkflows({
+                owner,
+                repo
+              });
+              return data.workflows.filter(wf => !wf.name.includes('Analytics'));
+            } catch (error) {
+              console.error('Error getting workflows:', error.message);
+              return [];
+            }
           }
           
           async function getWorkflowRuns(workflow_id, limit = 10) {
-            const { data } = await octokit.actions.listWorkflowRuns({
-              owner,
-              repo,
-              workflow_id,
-              per_page: limit
-            });
-            return data.workflow_runs;
+            try {
+              const { data } = await octokit.actions.listWorkflowRuns({
+                owner,
+                repo,
+                workflow_id,
+                per_page: limit
+              });
+              return data.workflow_runs;
+            } catch (error) {
+              console.error(`Error getting runs for workflow ${workflow_id}:`, error.message);
+              return [];
+            }
           }
           
           function formatDuration(ms) {
-            if (!ms) return 'N/A';
+            if (!ms || isNaN(ms)) return 'N/A';
             const seconds = Math.floor(ms / 1000);
             const minutes = Math.floor(seconds / 60);
             const hours = Math.floor(minutes / 60);
@@ -88,8 +112,14 @@ jobs:
             };
             
             for (const workflow of workflows) {
+              console.log(`Processing workflow: ${workflow.name} (${workflow.id})`);
               const runs = await getWorkflowRuns(workflow.id, 5);
-              if (runs.length === 0) continue;
+              if (!runs || runs.length === 0) {
+                console.log(`No runs found for workflow: ${workflow.name}`);
+                continue;
+              }
+              
+              console.log(`Found ${runs.length} runs for workflow: ${workflow.name}`);
               
               dashboardContent += `### ${workflow.name}\n\n`;
               dashboardContent += `| Run | Status | Started | Duration | Trigger |\n`;
@@ -104,7 +134,9 @@ jobs:
               };
               
               for (const run of runs) {
-                const status = run.conclusion || run.status;
+                console.log(`Processing run #${run.run_number}:`, JSON.stringify(run, null, 2).substring(0, 500) + '...');
+                
+                const status = run.conclusion || run.status || 'unknown';
                 const statusEmoji = 
                   status === 'success' ? '✅' :
                   status === 'failure' ? '❌' :
@@ -113,22 +145,26 @@ jobs:
                 if (status === 'success') workflowStats.successful++;
                 if (status === 'failure') workflowStats.failed++;
                 
-                const startedAt = new Date(run.created_at);
+                const startedAt = run.created_at ? new Date(run.created_at) : new Date();
                 const completedAt = run.completed_at ? new Date(run.completed_at) : null;
                 
                 let duration = null;
-                if (completedAt) {
+                if (completedAt && startedAt) {
                   duration = completedAt - startedAt;
-                  workflowStats.totalDuration += duration;
-                  workflowStats.validDurationCount++;
-                  
-                  overallStats.totalDuration += duration;
-                  overallStats.validDurationCount++;
+                  if (!isNaN(duration) && duration > 0) {
+                    workflowStats.totalDuration += duration;
+                    workflowStats.validDurationCount++;
+                    
+                    overallStats.totalDuration += duration;
+                    overallStats.validDurationCount++;
+                  } else {
+                    console.log(`Invalid duration for run #${run.run_number}: ${duration}`);
+                  }
                 }
                 
-                const trigger = run.event;
+                const trigger = run.event || 'unknown';
                 
-                dashboardContent += `| [#${run.run_number}](${run.html_url}) | ${statusEmoji} ${status} | ${startedAt.toISOString().split('T')[0]} | ${formatDuration(duration)} | ${trigger} |\n`;
+                dashboardContent += `| [#${run.run_number}](${run.html_url || '#'}) | ${statusEmoji} ${status} | ${startedAt.toISOString().split('T')[0]} | ${formatDuration(duration)} | ${trigger} |\n`;
               }
               
               overallStats.total += workflowStats.total;
@@ -176,12 +212,20 @@ jobs:
             
             console.log('Analysis complete');
             
-            // Set output for GitHub Actions
-            fs.writeFileSync(process.env.GITHUB_OUTPUT, `dashboard_content<<EOF\n${dashboardContent}\nEOF\n`, { flag: 'a' });
+            // Use GitHub Actions Core library to set output instead of writing to file
+            core.setOutput('dashboard_content', dashboardContent);
+            
+            // Also write to file as backup method
+            try {
+              fs.writeFileSync('dashboard_content.txt', dashboardContent);
+              console.log('Dashboard content written to file successfully');
+            } catch (error) {
+              console.error('Error writing dashboard content to file:', error);
+            }
           }
           
           analyzeWorkflows().catch(error => {
-            console.error('Error:', error);
+            console.error('Error during workflow analysis:', error);
             process.exit(1);
           });
           EOL
@@ -193,6 +237,17 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: node analyze.mjs
+      
+      - name: Read dashboard content from file if needed
+        id: read_file
+        if: ${{ steps.analysis.outputs.dashboard_content == '' || steps.analysis.outcome == 'failure' }}
+        run: |
+          if [ -f dashboard_content.txt ]; then
+            echo "dashboard_content=$(cat dashboard_content.txt)" >> $GITHUB_OUTPUT
+            echo "File content read successfully"
+          else
+            echo "dashboard_content=Workflow analysis failed. Please check the logs for details." >> $GITHUB_OUTPUT
+          fi
       
       - name: Find existing dashboard issue
         id: find_issue
@@ -210,8 +265,12 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name }}
           ISSUE_NUMBER: ${{ steps.find_issue.outputs.ISSUE_NUMBER }}
-          DASHBOARD_CONTENT: ${{ steps.analysis.outputs.dashboard_content }}
+          DASHBOARD_CONTENT: ${{ steps.analysis.outputs.dashboard_content || steps.read_file.outputs.dashboard_content }}
         run: |
+          if [ -z "$DASHBOARD_CONTENT" ]; then
+            DASHBOARD_CONTENT="Workflow analysis failed to generate content. Please check the logs for details."
+          fi
+          
           if [ -z "$ISSUE_NUMBER" ]; then
             # Create new issue
             gh issue create --repo $REPO_OWNER/$REPO_NAME \
