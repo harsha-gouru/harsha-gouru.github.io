@@ -34,6 +34,23 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.source_branch || 'main' }}
       
+      - name: Verify content directory structure
+        run: |
+          # Print workspace and content directories
+          echo "Workspace directory: $GITHUB_WORKSPACE"
+          ls -la
+          
+          # Verify content directories exist
+          mkdir -p content/_incoming content/posts content/_processed content/_error
+          
+          # List all content directories
+          echo "Content directories:"
+          ls -la content/
+          
+          # Show files in _incoming
+          echo "Files in _incoming:"
+          ls -la content/_incoming/ || echo "No files or directory doesn't exist"
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -41,10 +58,38 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install gray-matter
+          npm list || true
+      
+      - name: Debug script
+        run: |
+          cat scripts/process-incoming.js || echo "Script file not found"
       
       - name: Process incoming content
-        run: node scripts/process-incoming.js
+        id: process_content
+        run: |
+          echo "Running content processing script..."
+          node scripts/process-incoming.js
+          EXIT_CODE=$?
+          echo "Script exit code: $EXIT_CODE"
+          
+          # Count files in relevant directories
+          INCOMING_COUNT=$(ls -1 content/_incoming/ 2>/dev/null | wc -l)
+          POSTS_COUNT=$(ls -1 content/posts/ 2>/dev/null | wc -l)
+          PROCESSED_COUNT=$(ls -1 content/_processed/ 2>/dev/null | wc -l)
+          ERROR_COUNT=$(ls -1 content/_error/ 2>/dev/null | wc -l)
+          
+          echo "Files in _incoming: $INCOMING_COUNT"
+          echo "Files in posts: $POSTS_COUNT"
+          echo "Files in _processed: $PROCESSED_COUNT"
+          echo "Files in _error: $ERROR_COUNT"
+          
+          # Set outputs for later steps
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          if [ "$PROCESSED_COUNT" -gt 0 ] || [ "$ERROR_COUNT" -gt 0 ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
       
       - name: Configure Git
         run: |
@@ -53,8 +98,10 @@ jobs:
       
       - name: Commit processed files
         id: commit
+        if: steps.process_content.outputs.has_changes == 'true'
         run: |
-          git add content/posts/ content/_processed/
+          # Check if we have any changes to commit
+          git add content/posts/ content/_processed/ content/_error/
           if git diff --staged --quiet; then
             echo "No changes to commit"
             echo "changes_made=false" >> $GITHUB_OUTPUT
@@ -114,7 +161,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       
-      - name: Send Slack notification (No changes)
+      - name: Send Slack notification (No changes or error)
         if: steps.commit.outputs.changes_made != 'true'
         uses: 8398a7/action-slack@v3
         with:
