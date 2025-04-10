@@ -1,14 +1,15 @@
-#!/usr/bin/env node
-
 /**
- * This script processes files from the content/_incoming directory
- * and moves them to the appropriate content directories
+ * Process Incoming Blog Posts
+ * 
+ * This script processes Markdown blog posts from content/_incoming directory
+ * and moves them to the content/posts directory with proper formatting and metadata.
  */
 
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 
+// Directory paths
 const INCOMING_DIR = path.join(process.cwd(), 'content', '_incoming');
 const POSTS_DIR = path.join(process.cwd(), 'content', 'posts');
 const PROCESSED_DIR = path.join(process.cwd(), 'content', '_processed');
@@ -22,130 +23,99 @@ const ERROR_DIR = path.join(process.cwd(), 'content', '_error');
   }
 });
 
-// Get all files from incoming directory
-let files = [];
+// Get list of Markdown files in incoming directory
+let incomingFiles;
 try {
-  files = fs.readdirSync(INCOMING_DIR).filter(file => file.endsWith('.md'));
-  console.log(`Found ${files.length} markdown files in _incoming directory`);
-} catch (error) {
-  console.error(`Error reading incoming directory: ${error.message}`);
+  incomingFiles = fs.readdirSync(INCOMING_DIR)
+    .filter(file => file.endsWith('.md') || file.endsWith('.mdx'));
+  
+  console.log(`Found ${incomingFiles.length} file(s) to process`);
+} catch (err) {
+  console.error('Error reading incoming directory:', err);
   process.exit(1);
 }
 
-if (files.length === 0) {
-  console.log('No files to process in _incoming directory');
-  process.exit(0);
-}
-
-// Counter for successful and failed files
-let successCount = 0;
-let errorCount = 0;
-
 // Process each file
-files.forEach(file => {
-  console.log(`\nProcessing file: ${file}`);
-  const incomingPath = path.join(INCOMING_DIR, file);
+incomingFiles.forEach(filename => {
+  const sourcePath = path.join(INCOMING_DIR, filename);
+  console.log(`Processing: ${filename}`);
   
   try {
-    // Read the file
-    const content = fs.readFileSync(incomingPath, 'utf8');
-    console.log(`Read file: ${file} (${content.length} bytes)`);
+    // Read the file content
+    const fileContent = fs.readFileSync(sourcePath, 'utf8');
     
-    // Parse frontmatter with error handling
-    let parsedContent;
-    try {
-      parsedContent = matter(content);
-      console.log(`Parsed frontmatter successfully`);
-    } catch (parseError) {
-      console.error(`Error parsing frontmatter in ${file}: ${parseError.message}`);
-      
-      // Create minimal frontmatter if missing
-      parsedContent = {
-        data: {
-          title: file.replace('.md', ''),
-          date: new Date().toISOString()
-        },
-        content: content
-      };
-      console.log(`Created default frontmatter for file without valid frontmatter`);
-    }
+    // Parse frontmatter
+    let { data, content } = matter(fileContent);
     
-    // Extract data and content
-    const { data, content: markdownContent } = parsedContent;
-    
-    // Ensure required fields exist
+    // Ensure required metadata exists
     if (!data.title) {
-      data.title = file.replace('.md', '');
-      console.log(`Added missing title: ${data.title}`);
+      // Extract title from first heading if not in frontmatter
+      const titleMatch = content.match(/^#\s+(.+)$/m);
+      if (titleMatch) {
+        data.title = titleMatch[1];
+        // Remove the title from content to avoid duplication
+        content = content.replace(/^#\s+(.+)$/m, '');
+      } else {
+        data.title = path.basename(filename, path.extname(filename))
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, c => c.toUpperCase());
+      }
     }
     
-    // Generate a slug from the title
-    const slug = data.slug || 
-      data.title.toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-');
-    console.log(`Using slug: ${slug}`);
-    
-    // Format date if provided
-    let date = data.date ? new Date(data.date) : new Date();
-    // Handle invalid dates
-    if (isNaN(date.getTime())) {
-      console.log(`Invalid date detected, using current date`);
-      date = new Date();
+    // Add date if missing
+    if (!data.date) {
+      data.date = new Date().toISOString().split('T')[0];
     }
-    const formattedDate = date.toISOString().split('T')[0];
     
-    // Create a filename with date prefix
-    const newFilename = `${formattedDate}-${slug}.md`;
-    const postsPath = path.join(POSTS_DIR, newFilename);
+    // Add author if missing
+    if (!data.author) {
+      data.author = "Harsha Gouru";
+    }
     
-    // Create updated frontmatter with date
-    const updatedData = {
-      ...data,
-      date: formattedDate,
-      published: true,
-      slug: slug
-    };
+    // Add default tags if missing
+    if (!data.tags || !Array.isArray(data.tags) || data.tags.length === 0) {
+      data.tags = ["tech", "web-development"];
+    }
     
-    // Stringify the content with updated frontmatter
-    const updatedContent = matter.stringify(markdownContent, updatedData);
+    // Add slug if missing
+    if (!data.slug) {
+      data.slug = path.basename(filename, path.extname(filename))
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '');
+    }
+    
+    // Generate new content with improved frontmatter
+    const newContent = matter.stringify(content.trim(), data);
+    
+    // Create new filename based on date and slug
+    const datePrefix = data.date.replace(/[^\d]/g, '').substring(0, 8);
+    const newFilename = `${datePrefix}-${data.slug}${path.extname(filename)}`;
+    const destPath = path.join(POSTS_DIR, newFilename);
     
     // Write to posts directory
-    fs.writeFileSync(postsPath, updatedContent);
-    console.log(`Processed and moved: ${file} → ${newFilename}`);
+    fs.writeFileSync(destPath, newContent);
+    console.log(`✅ Saved to: ${destPath}`);
     
-    // Move original to processed folder
-    const processedPath = path.join(PROCESSED_DIR, file);
-    fs.renameSync(incomingPath, processedPath);
-    console.log(`Moved original to processed folder: ${file}`);
+    // Move original to processed directory
+    const processedPath = path.join(PROCESSED_DIR, filename);
+    fs.copyFileSync(sourcePath, processedPath);
+    fs.unlinkSync(sourcePath);
+    console.log(`✅ Moved original to processed directory`);
     
-    successCount++;
-  } catch (error) {
-    console.error(`Error processing file ${file}: ${error.message}`);
+  } catch (err) {
+    console.error(`❌ Error processing ${filename}:`, err);
     
-    // Move problematic file to error directory
+    // Move to error directory
     try {
-      const errorPath = path.join(ERROR_DIR, file);
-      fs.renameSync(incomingPath, errorPath);
-      console.log(`Moved problematic file to error folder: ${file}`);
-    } catch (moveError) {
-      console.error(`Error moving problematic file: ${moveError.message}`);
+      const errorPath = path.join(ERROR_DIR, filename);
+      fs.copyFileSync(sourcePath, errorPath);
+      fs.unlinkSync(sourcePath);
+      console.log(`⚠️ Moved to error directory: ${errorPath}`);
+    } catch (moveErr) {
+      console.error('Failed to move file to error directory:', moveErr);
     }
-    
-    errorCount++;
   }
 });
 
-console.log(`\nProcessing complete!`);
-console.log(`Successfully processed: ${successCount} files`);
-console.log(`Failed to process: ${errorCount} files`);
-
-// Exit with error code if any files failed
-if (errorCount > 0) {
-  console.log(`Some files could not be processed. Check the _error directory for details.`);
-  // Still exit with 0 so the workflow continues
-  process.exit(0);
-} else {
-  console.log(`All files processed successfully!`);
-  process.exit(0);
-} 
+console.log('Processing complete!'); 

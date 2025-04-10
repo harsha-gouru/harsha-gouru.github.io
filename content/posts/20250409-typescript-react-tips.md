@@ -1,11 +1,19 @@
 ---
-title: "TypeScript Tips for React Developers"
-date: "2025-04-09"
-author: "Harsha Gouru"
-tags: ["typescript", "react", "frontend", "javascript", "type-safety"]
-excerpt: "Discover practical TypeScript techniques to enhance your React applications with improved type safety, better component props management, and more maintainable code."
+title: TypeScript Tips for React Developers
+date: '2025-04-09'
+author: Harsha Gouru
+tags:
+  - typescript
+  - react
+  - frontend
+  - javascript
+  - type-safety
+excerpt: >-
+  Discover practical TypeScript techniques to enhance your React applications
+  with improved type safety, better component props management, and more
+  maintainable code.
+slug: typescript-react-tips
 ---
-
 # TypeScript Tips for React Developers
 
 TypeScript has become the standard choice for building large-scale React applications, and for good reason. It provides type safety, better tooling, and more maintainable code. But simply using TypeScript isn't enough—you need to use it effectively. In this post, I'll share some practical TypeScript tips that will help you write better React applications.

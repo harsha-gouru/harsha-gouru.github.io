@@ -1,5 +1,12 @@
-# Using the Automated Blog Workflow
-
+---
+title: Using the Automated Blog Workflow
+date: '2025-04-10'
+author: Harsha Gouru
+tags:
+  - tech
+  - web-development
+slug: sample-post
+---
 This is a sample blog post that demonstrates how to use the new automated blog workflow. Simply create Markdown files like this one and place them in the `content/_incoming` directory.
 
 ## How the Workflow Works
@@ -38,4 +45,4 @@ Everything is logged for **traceability** and you'll receive deployment confirma
 
 ## Next Steps
 
-For your real blog posts, simply replace this file with your actual content, and the **automation system** will handle the rest! 
+For your real blog posts, simply replace this file with your actual content, and the **automation system** will handle the rest!

@@ -1,7 +1,7 @@
-name: Blog Content Pipeline
+name: Content Processing Workflow
 
 on:
-  # Only run on manual trigger with a special input parameter
+  # Run on manual trigger with input parameters
   workflow_dispatch:
     inputs:
       source_commit:
@@ -12,6 +12,14 @@ on:
         description: 'Source branch'
         required: false
         default: 'main'
+  # Also run when changes are made to _incoming directory
+  push:
+    branches: [main]
+    paths:
+      - 'content/_incoming/**'
+  # Run daily to check for any missed content
+  schedule:
+    - cron: '0 0 * * *'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -27,6 +35,8 @@ concurrency:
 jobs:
   process-and-commit:
     runs-on: ubuntu-latest
+    outputs:
+      changes_made: ${{ steps.commit.outputs.changes_made }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -233,4 +243,49 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
           text: 'No content changes to process! :memo:'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} 
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy:
+    needs: process-and-commit
+    runs-on: ubuntu-latest
+    # Only run when there are changes to deploy
+    if: needs.process-and-commit.outputs.changes_made == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci || npm install
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Create .nojekyll file
+        run: touch build/.nojekyll
+      
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: build
+          clean: true
+          # Add a commit message that skips additional workflows
+          commit-message: "Auto deploy [skip ci]"
+      
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          text: 'Blog content processed and deployed! 🚀✨'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always() # This ensures the step runs regardless of previous step status 

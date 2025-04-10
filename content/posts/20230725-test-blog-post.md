@@ -1,11 +1,15 @@
 ---
-title: "Testing the Notification Workflow"
-date: "2023-07-25"
-description: "This is a test post to verify our automated content notification system"
-tags: ["test", "automation", "workflow"]
-category: "Development"
+title: Testing the Notification Workflow
+date: '2023-07-25'
+description: This is a test post to verify our automated content notification system
+tags:
+  - test
+  - automation
+  - workflow
+category: Development
+author: Harsha Gouru
+slug: test-blog-post
 ---
-
 # Testing the Content Notification Workflow
 
 This is a test post to verify that our automated notification system works correctly.
@@ -29,4 +33,4 @@ If everything is working correctly, we should be able to click the "Deploy Now" 
 
 ## Next Steps
 
-If this test is successful, we can move forward with standardizing this workflow for all content updates. 
+If this test is successful, we can move forward with standardizing this workflow for all content updates.
