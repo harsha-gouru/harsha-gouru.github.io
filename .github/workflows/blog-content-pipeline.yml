@@ -61,6 +61,70 @@ jobs:
         run: |
           npm install gray-matter
           npm list || true
+          # Install jq for JSON handling
+          sudo apt-get update && sudo apt-get install -y jq
+      
+      - name: Collect incoming content metadata
+        id: collect_metadata
+        run: |
+          # Check if there are any files to process
+          if [ -z "$(ls -A content/_incoming/*.md 2>/dev/null)" ]; then
+            echo "No markdown files found in _incoming directory"
+            echo "has_incoming_files=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "has_incoming_files=true" >> $GITHUB_OUTPUT
+          
+          # Create temp file for JSON
+          TEMP_FILE=$(mktemp)
+          
+          echo "[" > $TEMP_FILE
+          FIRST=true
+          
+          # Process each incoming file
+          for FILE in content/_incoming/*.md; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              echo "," >> $TEMP_FILE
+            fi
+            
+            # Extract title - safely escape special characters
+            TITLE=$(head -n 5 "$FILE" | grep -i "title:" | sed 's/title://i' | tr -d '"' | xargs)
+            if [ -z "$TITLE" ]; then
+              TITLE=$(basename "$FILE" .md)
+            fi
+            
+            FILENAME=$(basename "$FILE")
+            CREATED=$(date -I)
+            
+            # Extract preview text (safer method)
+            PREVIEW=$(sed -n '1,10p' "$FILE" | grep -v "^---" | grep -v "^title:" | head -n 3 | tr '\n' ' ' | cut -c 1-100 | sed 's/"/\\"/g')
+            
+            # Write JSON object with proper escaping
+            echo "{" >> $TEMP_FILE
+            echo "  \"title\": \"${TITLE}\"," >> $TEMP_FILE
+            echo "  \"filename\": \"${FILENAME}\"," >> $TEMP_FILE
+            echo "  \"created\": \"${CREATED}\"," >> $TEMP_FILE
+            echo "  \"preview\": \"${PREVIEW}\"" >> $TEMP_FILE
+            echo "}" >> $TEMP_FILE
+          done
+          
+          echo "]" >> $TEMP_FILE
+          
+          # Validate JSON
+          if ! jq '.' $TEMP_FILE > /dev/null 2>&1; then
+            echo "Warning: Generated JSON is invalid, using simplified version"
+            echo "[]" > $TEMP_FILE
+          fi
+          
+          # Base64 encode the JSON to avoid environment variable issues
+          ENCODED_JSON=$(base64 -w 0 $TEMP_FILE)
+          echo "posts_json_b64=$ENCODED_JSON" >> $GITHUB_OUTPUT
+          
+          echo "Metadata collected for incoming posts"
+          cat $TEMP_FILE | jq '.'
       
       - name: Debug script
         run: |
