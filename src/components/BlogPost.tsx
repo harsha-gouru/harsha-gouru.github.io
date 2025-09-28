@@ -65,7 +65,13 @@ const BlogPost: React.FC<BlogPostProps> = ({
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-2">
             {tags.map(tag => (
-              <Tag key={tag} name={tag} />
+              isPreview ? (
+                <span key={tag} className="inline-flex items-center text-sm py-1 px-3 rounded-full border border-gray-200 text-gray-600 bg-white">
+                  {tag}
+                </span>
+              ) : (
+                <Tag key={tag} name={tag} />
+              )
             ))}
           </div>
         )}
