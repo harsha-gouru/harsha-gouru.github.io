@@ -1,4 +1,10 @@
-# Hello World!
+---
+title: "Hello World!"
+date: "2024-03-01"
+category: "Learnings"
+tags: ["react", "typescript", "getting-started"]
+excerpt: "Welcome to my new blog! My first post about technology, programming, and my journey as a developer."
+---
 
 Welcome to my new blog! This is my first post where I'll share my thoughts about technology, programming, and my journey as a developer.
 
