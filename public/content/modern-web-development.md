@@ -1,4 +1,10 @@
-# Modern Web Development Trends in 2024
+---
+title: "Modern Web Development Trends in 2024"
+date: "2024-03-15"
+category: "Findings"
+tags: ["web-development", "nextjs", "react", "css"]
+excerpt: "Exploring the most exciting trends in web development including meta-frameworks, component-driven development, and more."
+---
 
 Web development continues to evolve rapidly, with new frameworks, tools, and approaches emerging every year. In this post, we'll explore some of the most exciting trends in web development for 2024.
 

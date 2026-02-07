@@ -1,4 +1,10 @@
-# Introduction to Quantum Computing
+---
+title: "Introduction to Quantum Computing"
+date: "2024-03-10"
+category: "Research"
+tags: ["quantum-computing", "physics", "qiskit"]
+excerpt: "Quantum computing leverages principles of quantum mechanics to perform computations in ways classical computers cannot."
+---
 
 Quantum computing is an exciting field that leverages principles of quantum mechanics to perform computations in ways classical computers cannot. This post will introduce some fundamental concepts.
 

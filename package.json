@@ -60,6 +60,11 @@
     "postcss": "8.4.35",
     "tailwindcss": "3.4.1"
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-markdown|remark-gfm|micromark|mdast|unist|devlop|ccount|escape-string-regexp|markdown-table|zwitch|longest-streak|hast-util-to-jsx-runtime|comma-separated-tokens|hast-util-whitespace|property-information|space-separated-tokens|stringify-entities|character-entities-html4|character-entities-legacy|character-reference-invalid|is-decimal|is-hexadecimal|is-alphanumerical|is-alphabetical|decode-named-character-reference|trim-lines|vfile|bail|trough|unified)/)"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/harsha-gouru/harsha-gouru.github.io.git"

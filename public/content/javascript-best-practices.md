@@ -1,4 +1,10 @@
-# JavaScript Best Practices for Modern Web Development
+---
+title: "JavaScript Best Practices for Modern Web Development"
+date: "2024-03-20"
+category: "Learnings"
+tags: ["javascript", "best-practices", "es6"]
+excerpt: "Essential best practices for writing cleaner, more maintainable JavaScript code with modern ECMAScript features."
+---
 
 JavaScript has evolved significantly over the years, and with modern ECMAScript features, developers now have powerful tools at their disposal. This post covers essential best practices that will help you write cleaner, more maintainable JavaScript code.
 

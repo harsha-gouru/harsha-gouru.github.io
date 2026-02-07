@@ -3,12 +3,14 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Tag from './Tag';
+import { CATEGORY_COLORS } from '../utils/constants';
 
 interface BlogPostProps {
   title: string;
   date: string;
   content: string;
   excerpt?: string;
+  category?: string;
   tags?: string[];
   readingTime?: string;
   isPreview?: boolean;
@@ -19,6 +21,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
   date,
   content,
   excerpt,
+  category,
   tags = [],
   readingTime,
   isPreview = false
@@ -29,8 +32,6 @@ const BlogPost: React.FC<BlogPostProps> = ({
     day: 'numeric'
   });
 
-  // If we're displaying the full post, remove the first heading (title) from content
-  // to avoid duplication since we display the title separately
   const processedContent = isPreview 
     ? (excerpt || content.slice(0, 300) + '...') 
     : content.replace(/^#\s+.*$/m, '').trim();
@@ -38,18 +39,23 @@ const BlogPost: React.FC<BlogPostProps> = ({
   return (
     <article className={`prose max-w-none ${isPreview ? 'group cursor-pointer' : ''}`}>
       <header className="mb-6">
-        <div className="flex items-center text-sm text-gray-500 mb-2">
-          <time dateTime={date} className="transition-colors duration-200 group-hover:text-gray-700 flex items-center">
-            <svg className="w-4 h-4 mr-1.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <div className="flex items-center gap-3 text-sm text-gray-500 mb-3">
+          {category && (
+            <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${CATEGORY_COLORS[category] || 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+              {category}
+            </span>
+          )}
+          <time dateTime={date} className="flex items-center">
+            <svg className="w-3.5 h-3.5 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             {formattedDate}
           </time>
           {readingTime && (
             <>
-              <span className="mx-2 text-gray-400">•</span>
-              <span className="transition-colors duration-200 group-hover:text-gray-700 flex items-center">
-                <svg className="w-4 h-4 mr-1.5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <span className="text-gray-300">·</span>
+              <span className="flex items-center">
+                <svg className="w-3.5 h-3.5 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {readingTime}
@@ -58,7 +64,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
           )}
         </div>
         
-        <h1 className={`font-bold text-2xl ${isPreview ? 'md:text-3xl' : 'md:text-4xl'} tracking-tight mb-4 transition-colors duration-200 ${isPreview ? 'group-hover:text-black' : 'text-black'}`}>
+        <h1 className={`font-bold ${isPreview ? 'text-2xl' : 'text-2xl md:text-3xl'} tracking-tight mb-4 transition-colors duration-200 ${isPreview ? 'group-hover:text-black text-gray-900' : 'text-black'}`}>
           {title}
         </h1>
         
@@ -139,9 +145,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
 
       {isPreview && (
         <footer>
-          <span
-            className="inline-flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 font-medium"
-          >
+          <span className="inline-flex items-center space-x-2 text-gray-700 hover:text-black transition-colors duration-200 font-medium">
             <span>Continue reading</span>
             <span className="transform transition-transform group-hover:translate-x-1">→</span>
           </span>

@@ -118,4 +118,36 @@ incomingFiles.forEach(filename => {
   }
 });
 
+// --- Generate posts.json manifest ---
+const PUBLIC_CONTENT_DIR = path.join(process.cwd(), 'public', 'content');
+
+// Ensure public/content directory exists
+if (!fs.existsSync(PUBLIC_CONTENT_DIR)) {
+  fs.mkdirSync(PUBLIC_CONTENT_DIR, { recursive: true });
+}
+
+// Read all markdown files from public/content
+const publicMdFiles = fs.readdirSync(PUBLIC_CONTENT_DIR)
+  .filter(file => file.endsWith('.md'));
+
+const manifest = publicMdFiles.map(filename => {
+  const filePath = path.join(PUBLIC_CONTENT_DIR, filename);
+  const fileContent = fs.readFileSync(filePath, 'utf8');
+  const { data } = matter(fileContent);
+  const id = path.basename(filename, '.md');
+  
+  return {
+    id,
+    title: data.title || id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    date: data.date || new Date().toISOString().split('T')[0],
+    category: data.category || 'Learnings',
+    tags: data.tags || [],
+    excerpt: data.excerpt || ''
+  };
+}).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const manifestPath = path.join(PUBLIC_CONTENT_DIR, 'posts.json');
+fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+console.log(`✅ Generated posts.json manifest with ${manifest.length} posts`);
+
 console.log('Processing complete!'); 
