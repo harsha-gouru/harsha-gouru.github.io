@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import TagList from './TagList';
+import { CATEGORIES, CATEGORY_COLORS } from '../utils/constants';
 
 interface PostMeta {
   id: string;
@@ -15,16 +16,6 @@ interface Post extends PostMeta {
   content: string;
   readingTime: string;
 }
-
-const CATEGORIES = ['All', 'Research', 'Learnings', 'Findings', 'Todo', 'Projects'];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  Research: 'bg-blue-50 text-blue-700 border-blue-200',
-  Learnings: 'bg-green-50 text-green-700 border-green-200',
-  Findings: 'bg-amber-50 text-amber-700 border-amber-200',
-  Todo: 'bg-purple-50 text-purple-700 border-purple-200',
-  Projects: 'bg-rose-50 text-rose-700 border-rose-200',
-};
 
 const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -132,6 +123,7 @@ const Home: React.FC = () => {
                 key={category}
                 role="tab"
                 aria-selected={isActive}
+                aria-label={`${category}${count > 0 ? `, ${count} posts` : ''}`}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-colors duration-200 ${
                   isActive

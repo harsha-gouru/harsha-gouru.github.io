@@ -36,7 +36,8 @@ const parseFrontmatter = (raw: string): { data: Record<string, any>; content: st
     }
     // Parse arrays
     if (value.startsWith('[') && value.endsWith(']')) {
-      data[key] = value.slice(1, -1).split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
+      const trimmed = value.slice(1, -1).trim();
+      data[key] = trimmed ? trimmed.split(',').map(v => v.trim().replace(/^["']|["']$/g, '')) : [];
     } else {
       data[key] = value;
     }
