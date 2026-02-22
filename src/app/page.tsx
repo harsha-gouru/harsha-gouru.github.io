@@ -7,13 +7,13 @@ export default function Home() {
   const featured = projects.filter((p) => p.featured);
 
   return (
-    <div className="space-y-24 py-12">
+    <div className="space-y-16 py-8">
       {/* Intro */}
-      <section className="space-y-8">
-        <h1 className="text-4xl font-semibold tracking-tight leading-[1.1]">
+      <section className="space-y-4">
+        <h1 className="text-3xl font-semibold tracking-tight leading-[1.1]">
           Sri Harsha Gouru
         </h1>
-        <div className="space-y-5 text-accent leading-[1.7] text-[17px]">
+        <div className="space-y-4 text-accent leading-relaxed">
           <p>
             Most of what I do starts with a question I can&apos;t let go of.
             Lately it&apos;s been{" "}
@@ -37,20 +37,19 @@ export default function Home() {
       </section>
 
       {/* Featured Projects */}
-      <section className="space-y-6">
+      <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-muted" style={{ fontFamily: "var(--font-sans)" }}>
+          <h2 className="font-mono text-sm text-muted uppercase tracking-wider">
             Selected work
           </h2>
           <Link
             href="/projects"
-            className="text-xs text-muted hover:text-foreground transition-colors tracking-wide"
-            style={{ fontFamily: "var(--font-sans)" }}
+            className="font-mono text-sm text-muted hover:text-foreground transition-colors"
           >
             all projects &rarr;
           </Link>
         </div>
-        <div className="space-y-5">
+        <div className="space-y-4">
           {featured.map((project) => (
             <a
               key={project.title}
@@ -63,7 +62,7 @@ export default function Home() {
                 <h3 className="text-lg font-medium group-hover:text-foreground text-accent transition-colors">
                   {project.title}
                 </h3>
-                <span className="text-xs text-muted" style={{ fontFamily: "var(--font-mono)" }}>
+                <span className="font-mono text-xs text-muted">
                   {project.year}
                 </span>
               </div>
@@ -74,8 +73,7 @@ export default function Home() {
                 {project.stack.map((tech) => (
                   <span
                     key={tech}
-                    className="text-[11px] text-muted border border-border rounded-full px-2.5 py-0.5"
-                    style={{ fontFamily: "var(--font-mono)" }}
+                    className="font-mono text-[11px] text-muted border border-border rounded-full px-2.5 py-0.5"
                   >
                     {tech}
                   </span>
@@ -87,15 +85,14 @@ export default function Home() {
       </section>
 
       {/* Writing */}
-      <section className="space-y-6">
+      <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-muted" style={{ fontFamily: "var(--font-sans)" }}>
+          <h2 className="font-mono text-sm text-muted uppercase tracking-wider">
             Writing
           </h2>
           <Link
             href="/blog"
-            className="text-xs text-muted hover:text-foreground transition-colors tracking-wide"
-            style={{ fontFamily: "var(--font-sans)" }}
+            className="font-mono text-sm text-muted hover:text-foreground transition-colors"
           >
             all posts &rarr;
           </Link>
@@ -119,7 +116,7 @@ export default function Home() {
                       <p className="text-[13px] text-muted mt-1">{post.description}</p>
                     )}
                   </div>
-                  <span className="text-xs text-muted shrink-0 ml-4" style={{ fontFamily: "var(--font-mono)" }}>
+                  <span className="font-mono text-xs text-muted shrink-0 ml-4">
                     {post.date}
                   </span>
                 </div>

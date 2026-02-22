@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 function Nav() {
   return (
-    <nav className="flex items-center justify-between py-10">
+    <nav className="flex items-center justify-between py-8">
       <Link
         href="/"
         className="text-sm text-muted hover:text-foreground transition-colors tracking-wide"
@@ -51,7 +51,7 @@ function Nav() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border py-10 mt-24">
+    <footer className="border-t border-border py-8 mt-20">
       <div className="flex items-center justify-between text-sm text-muted" style={{ fontFamily: "var(--font-sans)" }}>
         <span>&copy; 2026</span>
         <a
@@ -77,7 +77,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${newsreader.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <div className="max-w-xl mx-auto px-6">
+        <div className="max-w-2xl mx-auto px-6">
           <Nav />
           <main className="min-h-[70vh]">{children}</main>
           <Footer />
