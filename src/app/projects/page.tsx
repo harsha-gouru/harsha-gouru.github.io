@@ -2,12 +2,12 @@ import { projects } from "@/lib/projects";
 
 export default function ProjectsPage() {
   return (
-    <div className="space-y-8 py-8">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">Projects</h1>
-        <p className="text-muted">
-          A mix of shipped work and active experiments. I tend to go deep on
-          things — most of these started as &quot;let me understand how this actually works.&quot;
+    <div className="space-y-10 py-12">
+      <div className="space-y-4">
+        <h1 className="text-3xl font-semibold tracking-tight">Projects</h1>
+        <p className="text-accent leading-[1.7]">
+          Things I&apos;ve built to answer questions I couldn&apos;t stop thinking about.
+          Most start as experiments — some become tools other people use.
         </p>
       </div>
       <div className="space-y-6">
@@ -17,34 +17,25 @@ export default function ProjectsPage() {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="block group border border-border rounded-lg p-5 hover:border-accent transition-colors"
+            className="block group border border-border rounded-lg p-6 hover:border-muted transition-all duration-300"
           >
-            <div className="flex items-baseline justify-between mb-2">
-              <h2 className="font-medium group-hover:text-foreground text-accent transition-colors">
+            <div className="flex items-baseline justify-between mb-3">
+              <h2 className="text-lg font-medium group-hover:text-foreground text-accent transition-colors">
                 {project.title}
               </h2>
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-mono text-[10px] text-muted uppercase"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <span className="font-mono text-xs text-muted">{project.year}</span>
-              </div>
+              <span className="text-xs text-muted" style={{ fontFamily: "var(--font-mono)" }}>
+                {project.year}
+              </span>
             </div>
-            <p className="text-sm text-muted leading-relaxed mb-3">
+            <p className="text-sm text-muted leading-relaxed mb-4">
               {project.description}
             </p>
             <div className="flex flex-wrap gap-2">
               {project.stack.map((tech) => (
                 <span
                   key={tech}
-                  className="font-mono text-[11px] text-muted border border-border rounded px-2 py-0.5"
+                  className="text-[11px] text-muted border border-border rounded-full px-2.5 py-0.5"
+                  style={{ fontFamily: "var(--font-mono)" }}
                 >
                   {tech}
                 </span>

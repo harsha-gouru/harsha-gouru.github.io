@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Newsreader, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -20,16 +29,20 @@ export const metadata: Metadata = {
 
 function Nav() {
   return (
-    <nav className="flex items-center justify-between py-8">
-      <Link href="/" className="font-mono text-sm text-muted hover:text-foreground transition-colors">
-        ~/harsha
+    <nav className="flex items-center justify-between py-10">
+      <Link
+        href="/"
+        className="text-sm text-muted hover:text-foreground transition-colors tracking-wide"
+        style={{ fontFamily: "var(--font-sans)" }}
+      >
+        harsha gouru
       </Link>
-      <div className="flex gap-6 font-mono text-sm">
+      <div className="flex gap-8 text-sm" style={{ fontFamily: "var(--font-sans)" }}>
         <Link href="/projects" className="text-muted hover:text-foreground transition-colors">
           projects
         </Link>
         <Link href="/blog" className="text-muted hover:text-foreground transition-colors">
-          blog
+          writing
         </Link>
       </div>
     </nav>
@@ -38,9 +51,9 @@ function Nav() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border py-8 mt-20">
-      <div className="flex items-center justify-between text-sm text-muted">
-        <span className="font-mono">Sri Harsha Gouru</span>
+    <footer className="border-t border-border py-10 mt-24">
+      <div className="flex items-center justify-between text-sm text-muted" style={{ fontFamily: "var(--font-sans)" }}>
+        <span>&copy; 2026</span>
         <a
           href="https://github.com/harsha-gouru"
           target="_blank"
@@ -62,9 +75,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${spaceGrotesk.variable} ${newsreader.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <div className="max-w-2xl mx-auto px-6">
+        <div className="max-w-xl mx-auto px-6">
           <Nav />
           <main className="min-h-[70vh]">{children}</main>
           <Footer />

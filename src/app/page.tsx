@@ -7,89 +7,75 @@ export default function Home() {
   const featured = projects.filter((p) => p.featured);
 
   return (
-    <div className="space-y-20 py-8">
+    <div className="space-y-24 py-12">
       {/* Intro */}
-      <section className="space-y-6">
-        <h1 className="text-3xl font-bold tracking-tight">
+      <section className="space-y-8">
+        <h1 className="text-4xl font-semibold tracking-tight leading-[1.1]">
           Sri Harsha Gouru
         </h1>
-        <div className="space-y-4 text-accent leading-relaxed max-w-xl">
+        <div className="space-y-5 text-accent leading-[1.7] text-[17px]">
           <p>
-            I build at the intersection of{" "}
-            <span className="text-foreground">AI systems</span>,{" "}
-            <span className="text-foreground">onchain infrastructure</span>, and{" "}
-            <span className="text-foreground">developer tools</span>.
+            Most of what I do starts with a question I can&apos;t let go of.
+            Lately it&apos;s been{" "}
+            <em className="text-foreground not-italic">what&apos;s actually happening inside a language model at inference time</em>
+            {" "}— so I built tools to watch it happen. Before that it was{" "}
+            <em className="text-foreground not-italic">can machines pay each other</em>
+            {" "}— so I wired up micropayments on Base with x402.
           </p>
           <p>
-            Right now I&apos;m deep into LLM internals — building tools to visualize
-            what happens inside these models at inference time. I&apos;m also exploring
-            x402 and autonomous agent payments on Base, and training small language
-            models from scratch.
+            I tend to work across the full surface — training small models,
+            building the infra to serve them, writing the interfaces people
+            interact with. The interesting problems usually live at the seams
+            between these layers.
           </p>
-          <p>
-            Previously worked across the stack — from fine-tuning models and building
-            ML pipelines to shipping full-stack apps. I like understanding systems
-            end to end, not just the interface.
+          <p className="text-muted text-[15px]">
+            AI systems, onchain protocols, developer tools — whatever the
+            medium, the through-line is understanding how things work well
+            enough to make new things from them.
           </p>
-        </div>
-      </section>
-
-      {/* Now */}
-      <section className="space-y-4">
-        <h2 className="font-mono text-sm text-muted uppercase tracking-wider">
-          Currently
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {[
-            { label: "LLM interpretability", detail: "attention visualization, token tracing" },
-            { label: "x402 + agent payments", detail: "micropayments on Base, autonomous commerce" },
-            { label: "Small model training", detail: "tinker ecosystem, experiment tracking" },
-            { label: "Indic language AI", detail: "heritage document digitization, 22+ languages" },
-          ].map((item) => (
-            <div key={item.label} className="border border-border rounded-lg p-4">
-              <p className="text-sm font-medium text-foreground">{item.label}</p>
-              <p className="text-xs text-muted mt-1">{item.detail}</p>
-            </div>
-          ))}
         </div>
       </section>
 
       {/* Featured Projects */}
-      <section className="space-y-4">
+      <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-sm text-muted uppercase tracking-wider">
-            Featured
+          <h2 className="text-xs uppercase tracking-[0.2em] text-muted" style={{ fontFamily: "var(--font-sans)" }}>
+            Selected work
           </h2>
           <Link
             href="/projects"
-            className="font-mono text-sm text-muted hover:text-foreground transition-colors"
+            className="text-xs text-muted hover:text-foreground transition-colors tracking-wide"
+            style={{ fontFamily: "var(--font-sans)" }}
           >
             all projects &rarr;
           </Link>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-5">
           {featured.map((project) => (
             <a
               key={project.title}
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block group border border-border rounded-lg p-5 hover:border-accent transition-colors"
+              className="block group border border-border rounded-lg p-6 hover:border-muted transition-all duration-300"
             >
-              <div className="flex items-baseline justify-between mb-2">
-                <h3 className="font-medium group-hover:text-foreground text-accent transition-colors">
+              <div className="flex items-baseline justify-between mb-3">
+                <h3 className="text-lg font-medium group-hover:text-foreground text-accent transition-colors">
                   {project.title}
                 </h3>
-                <span className="font-mono text-xs text-muted">{project.year}</span>
+                <span className="text-xs text-muted" style={{ fontFamily: "var(--font-mono)" }}>
+                  {project.year}
+                </span>
               </div>
-              <p className="text-sm text-muted leading-relaxed mb-3">
+              <p className="text-sm text-muted leading-relaxed mb-4">
                 {project.description}
               </p>
               <div className="flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
                   <span
                     key={tech}
-                    className="font-mono text-[11px] text-muted border border-border rounded px-2 py-0.5"
+                    className="text-[11px] text-muted border border-border rounded-full px-2.5 py-0.5"
+                    style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {tech}
                   </span>
@@ -101,21 +87,22 @@ export default function Home() {
       </section>
 
       {/* Writing */}
-      <section className="space-y-4">
+      <section className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-sm text-muted uppercase tracking-wider">
+          <h2 className="text-xs uppercase tracking-[0.2em] text-muted" style={{ fontFamily: "var(--font-sans)" }}>
             Writing
           </h2>
           <Link
             href="/blog"
-            className="font-mono text-sm text-muted hover:text-foreground transition-colors"
+            className="text-xs text-muted hover:text-foreground transition-colors tracking-wide"
+            style={{ fontFamily: "var(--font-sans)" }}
           >
             all posts &rarr;
           </Link>
         </div>
         <div className="space-y-1">
           {recentPosts.length === 0 ? (
-            <p className="text-muted text-sm">Coming soon.</p>
+            <p className="text-muted text-sm italic">Coming soon.</p>
           ) : (
             recentPosts.map((post) => (
               <Link
@@ -123,16 +110,16 @@ export default function Home() {
                 href={`/blog/${post.slug}`}
                 className="block group"
               >
-                <div className="flex items-baseline justify-between py-2.5 border-b border-border">
+                <div className="flex items-baseline justify-between py-3 border-b border-border">
                   <div>
                     <span className="group-hover:text-foreground text-accent transition-colors">
                       {post.title}
                     </span>
                     {post.description && (
-                      <p className="text-xs text-muted mt-0.5">{post.description}</p>
+                      <p className="text-[13px] text-muted mt-1">{post.description}</p>
                     )}
                   </div>
-                  <span className="font-mono text-xs text-muted shrink-0 ml-4">
+                  <span className="text-xs text-muted shrink-0 ml-4" style={{ fontFamily: "var(--font-mono)" }}>
                     {post.date}
                   </span>
                 </div>

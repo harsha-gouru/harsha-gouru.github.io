@@ -2,10 +2,10 @@
 
 :root {
   --background: #0a0a0a;
-  --foreground: #e5e5e5;
-  --muted: #737373;
-  --accent: #a3a3a3;
-  --border: #262626;
+  --foreground: #e8e4df;
+  --muted: #8a8580;
+  --accent: #b5afa8;
+  --border: #1e1c1a;
 }
 
 @theme inline {
@@ -14,25 +14,31 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-space-grotesk);
+  --font-serif: var(--font-newsreader);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-serif), Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans), system-ui, sans-serif;
+  letter-spacing: -0.03em;
 }
 
 ::selection {
-  background: #404040;
+  background: #3d3530;
 }
 
 a {
-  text-decoration-color: #525252;
-  text-underline-offset: 4px;
+  text-decoration: none;
 }
 
 a:hover {
-  text-decoration-color: #a3a3a3;
+  opacity: 0.85;
 }
